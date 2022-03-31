@@ -12,11 +12,12 @@ for writing portable Node.js functions
 The Functions Framework lets you write lightweight functions that run in many
 different environments, including:
 
-*   [Google Cloud Functions](https://cloud.google.com/functions/)
-*   Your local development machine
-*   [Cloud Run](https://cloud.google.com/run/) and [Cloud Run for Anthos](https://cloud.google.com/anthos/run)
-*   [Knative](https://github.com/knative/)-based environments
-*   [OpenFunction](https://github.com/OpenFunction/OpenFunction)
+* [Google Cloud Functions](https://cloud.google.com/functions/)
+* Your local development machine
+* [Cloud Run](https://cloud.google.com/run/) and [Cloud Run for Anthos](https://cloud.google.com/anthos/run)
+* [Knative](https://github.com/knative/)-based environments
+* [Dapr](https://dapr.io/)-based environments
+* [OpenFunction](https://github.com/OpenFunction/OpenFunction)
 
 The framework allows you to go from:
 
@@ -45,11 +46,11 @@ handling logic.
 
 ## Features
 
-- Spin up a local development server for quick testing
-- Invoke a function in response to a request
-- Automatically unmarshal events conforming to the
+* Spin up a local development server for quick testing
+* Invoke a function in response to a request
+* Automatically unmarshal events conforming to the
   [CloudEvents](https://cloudevents.io/) spec
-- Portable between serverless platforms
+* Portable between serverless platforms
 
 ## Installation
 
@@ -77,7 +78,7 @@ npm install @openfunction/functions-framework
     npx @openfunction/functions-framework --target=helloWorld
     ```
 
-1. Open http://localhost:8080/ in your browser and see _Hello, World_.
+1. Open <http://localhost:8080/> in your browser and see _Hello, World_.
 
 ### Quickstart: Set up a new project
 
@@ -132,7 +133,7 @@ command-line arguments:
 1. Install [Docker](https://store.docker.com/search?type=edition&offering=community) and the [`pack` tool](https://buildpacks.io/docs/install-pack/).
 
 1. Build a container from your function using the Functions [buildpacks](https://github.com/GoogleCloudPlatform/buildpacks):
-	
+
     ```sh
     pack build \
       --builder openfunction/builder-node:v2-16.13 \
@@ -142,14 +143,14 @@ command-line arguments:
     ```
 
 1. Start the built container:
-    
+
     ```sh
     docker run --rm -p 8080:8080 my-first-function
     # Output: Serving function...
     ```
 
 1. Send requests to this function using `curl` from another terminal window:
-    
+
     ```sh
     curl localhost:8080
     # Output: Hello, World!
@@ -249,7 +250,7 @@ To enable the CloudEvent functions, you must list the Functions Framework as a d
 ```json
 {
   "dependencies": {
-    "@openfunction/functions-framework": "~0.3.6"
+    "@openfunction/functions-framework": "~0.4.0"
   }
 }
 ```

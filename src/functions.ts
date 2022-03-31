@@ -19,6 +19,8 @@
 import {Request as ExpressRequest, Response} from 'express';
 import {CloudEventV1 as CloudEvent} from 'cloudevents';
 
+import {OpenFunctionRuntime} from './openfunction/function_runtime';
+
 /**
  * @public
  */
@@ -74,6 +76,11 @@ export interface CloudEventFunction<T = unknown> {
 export interface CloudEventFunctionWithCallback<T = unknown> {
   (cloudEvent: CloudEvent<T>, callback: Function): any;
 }
+
+export interface OpenFunction {
+  (ctx: OpenFunctionRuntime, data: {}): any;
+}
+
 /**
  * A function handler.
  * @public
@@ -83,7 +90,8 @@ export type HandlerFunction<T = unknown> =
   | EventFunction
   | EventFunctionWithCallback
   | CloudEventFunction<T>
-  | CloudEventFunctionWithCallback<T>;
+  | CloudEventFunctionWithCallback<T>
+  | OpenFunction;
 
 /**
  * A legacy event.
