@@ -43,7 +43,7 @@ export abstract class OpenFunctionRuntime {
   }
 
   /**
-   * The promise that send data to certain ouput binding.
+   * The promise that send data to certain ouput binding or pubsub topic.
    */
   abstract send(data: object, output?: string): Promise<object>;
 }

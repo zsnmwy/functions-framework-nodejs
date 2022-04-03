@@ -11,9 +11,9 @@ export interface OpenFunctionContext {
    */
   version: string;
   /**
-   * The target runtime of the context, only available as "knative" and "async".
+   * The target runtime of the context.
    */
-  runtime: RuntimeType[keyof RuntimeType];
+  runtime: keyof typeof RuntimeType;
   /**
    * Optional port string of the server.
    */
@@ -49,7 +49,7 @@ export interface OpenFunctionComponent {
   /**
    * The type of the component.
    */
-  componentType: `${ComponentType.Binding | ComponentType.PubSub}.${string}`;
+  componentType: `${ComponentType}.${string}`;
   /**
    * The uri of the component.
    */
