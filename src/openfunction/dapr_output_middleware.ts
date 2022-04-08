@@ -14,7 +14,7 @@ const debug = Debug('ofn:middleware:dapr:binding');
  * @param req express request object
  * @param res express response object
  */
-const daprBindingOutputHandler = (req: Request, res: Response) => {
+const daprOutputHandler = (req: Request, res: Response) => {
   return {
     isInterceptable: () => {
       return (
@@ -35,4 +35,4 @@ const daprBindingOutputHandler = (req: Request, res: Response) => {
   };
 };
 
-export default interceptor(daprBindingOutputHandler);
+export default interceptor(daprOutputHandler);

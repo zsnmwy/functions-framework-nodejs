@@ -24,7 +24,7 @@ import {cloudEventToBackgroundEventMiddleware} from './middleware/cloud_event_to
 import {backgroundEventToCloudEventMiddleware} from './middleware/background_event_to_cloud_event';
 import {wrapUserFunction} from './function_wrappers';
 
-import daprBindingOutputMiddleware from './openfunction/dapr_binding_output_middleware';
+import daprOutputMiddleware from './openfunction/dapr_output_middleware';
 
 /**
  * Creates and configures an Express application and returns an HTTP server
@@ -54,7 +54,7 @@ export function getServer(
   });
 
   // Use OpenFunction middlewares
-  app.use(daprBindingOutputMiddleware);
+  app.use(daprOutputMiddleware);
 
   /**
    * Retains a reference to the raw body buffer to allow access to the raw body
