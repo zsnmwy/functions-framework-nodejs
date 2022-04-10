@@ -3,7 +3,7 @@
   "version": "0.4.0",
   "description": "FaaS (Function as a service) framework for writing portable Node.js functions",
   "engines": {
-    "node": ">=10.0.0"
+    "node": ">=13.0.0"
   },
   "repository": "openfunction/functions-framework-nodejs",
   "main": "build/src/index.js",
