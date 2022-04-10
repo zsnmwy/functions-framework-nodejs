@@ -1,5 +1,6 @@
 /**
  * The OpenFunction's serving context.
+ * @public
  */
 export interface OpenFunctionContext {
   /**
@@ -30,6 +31,7 @@ export interface OpenFunctionContext {
 
 /**
  * The binding interface of the context.
+ * @public
  */
 export interface OpenFunctionBinding {
   /**
@@ -40,6 +42,7 @@ export interface OpenFunctionBinding {
 
 /**
  * The component interface of the context.
+ * @public
  */
 export interface OpenFunctionComponent {
   /**
@@ -64,6 +67,10 @@ export interface OpenFunctionComponent {
   metadata?: {[key: string]: string};
 }
 
+/**
+ * Defining runtime type enumeration.
+ * @public
+ */
 export enum RuntimeType {
   /**
    * The Knative type.
@@ -75,6 +82,10 @@ export enum RuntimeType {
   Async = 'Async',
 }
 
+/**
+ * Defining component type enumeration.
+ * @public
+ */
 export enum ComponentType {
   /**
    * The binding type.
@@ -86,10 +97,14 @@ export enum ComponentType {
   PubSub = 'pubsub',
 }
 
+/**
+ * Provides a set of methods to help determine types used in FunctionContext.
+ * @public
+ */
 export class ContextUtils {
   /**
    * Returns true if the runtime is Knative.
-   * @param {OpenFunctionContext} context - The OpenFunctionContext object.
+   * @param context - The OpenFunctionContext object.
    * @returns A boolean value.
    */
   static IsKnativeRuntime(context: OpenFunctionContext): boolean {
@@ -97,7 +112,7 @@ export class ContextUtils {
   }
   /**
    * Returns true if the runtime is Async.
-   * @param {OpenFunctionContext} context - The OpenFunctionContext object.
+   * @param context - The OpenFunctionContext object.
    * @returns A boolean value.
    */
   static IsAsyncRuntime(context: OpenFunctionContext): boolean {
@@ -106,7 +121,7 @@ export class ContextUtils {
 
   /**
    * Checks if the component is a binding component.
-   * @param {OpenFunctionComponent} component - The component to check.
+   * @param component - The component to check.
    * @returns A boolean value.
    */
   static IsBindingComponent(component: OpenFunctionComponent): boolean {
@@ -114,7 +129,7 @@ export class ContextUtils {
   }
   /**
    * Checks if the component is a pubsub component.
-   * @param {OpenFunctionComponent} component - The component to check.
+   * @param component - The component to check.
    * @returns A boolean value.
    */
   static IsPubSubComponent(component: OpenFunctionComponent): boolean {

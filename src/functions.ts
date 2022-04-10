@@ -77,6 +77,10 @@ export interface CloudEventFunctionWithCallback<T = unknown> {
   (cloudEvent: CloudEvent<T>, callback: Function): any;
 }
 
+/**
+ * A OpenFunction async function handler.
+ * @public
+ */
 export interface OpenFunction {
   (ctx: OpenFunctionRuntime, data: {}): any;
 }
