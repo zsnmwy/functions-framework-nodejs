@@ -20,6 +20,12 @@ import {getUserFunction} from './loader';
 import {ErrorHandler} from './invoker';
 import {getServer} from './server';
 import {parseOptions, helpText, OptionsError} from './options';
+import {OpenFunction} from './functions';
+import getAysncServer from './openfunction/async_server';
+import {
+  OpenFunctionContext,
+  ContextUtils,
+} from './openfunction/function_context';
 
 /**
  * Main entrypoint for the functions framework that loads the user's function
@@ -44,19 +50,30 @@ export const main = async () => {
       process.exit(1);
     }
     const {userFunction, signatureType} = loadedFunction;
-    const server = getServer(userFunction!, signatureType);
-    const errorHandler = new ErrorHandler(server);
-    server
-      .listen(options.port, () => {
-        errorHandler.register();
-        if (process.env.NODE_ENV !== 'production') {
-          console.log('Serving function...');
-          console.log(`Function: ${options.target}`);
-          console.log(`Signature type: ${signatureType}`);
-          console.log(`URL: http://localhost:${options.port}/`);
-        }
-      })
-      .setTimeout(0); // Disable automatic timeout on incoming connections.
+
+    if (ContextUtils.IsAsyncRuntime(options.context as OpenFunctionContext)) {
+      options.context!.port = options.port;
+
+      const server = getAysncServer(
+        userFunction! as OpenFunction,
+        options.context!
+      );
+      await server.start();
+    } else {
+      const server = getServer(userFunction!, signatureType, options.context);
+      const errorHandler = new ErrorHandler(server);
+      server
+        .listen(options.port, () => {
+          errorHandler.register();
+          if (process.env.NODE_ENV !== 'production') {
+            console.log('Serving function...');
+            console.log(`Function: ${options.target}`);
+            console.log(`Signature type: ${signatureType}`);
+            console.log(`URL: http://localhost:${options.port}/`);
+          }
+        })
+        .setTimeout(0); // Disable automatic timeout on incoming connections.
+    }
   } catch (e) {
     if (e instanceof OptionsError) {
       console.error(e.message);

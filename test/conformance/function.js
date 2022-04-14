@@ -1,5 +1,8 @@
 /* eslint-disable node/no-missing-require */
 const fs = require('fs');
+
+const debug = require('debug')('test:conformance');
+
 const functions = require('@openfunction/functions-framework');
 const fileName = 'function_output.json';
 
@@ -41,8 +44,19 @@ function writeJson(content) {
   fs.writeFileSync(fileName, json);
 }
 
+function tryKnative(req, res) {
+  debug('✅ Function should receive request: %o', req.body);
+  res.send(req.body);
+}
+
+function tryAsync(ctx, data) {
+  debug('✅ Function should receive from "%o": %o', ctx.inputs, data);
+}
+
 module.exports = {
   writeHttp,
   writeCloudEvent,
   writeLegacyEvent,
+  tryKnative,
+  tryAsync,
 };

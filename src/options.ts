@@ -12,9 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import * as minimist from 'minimist';
 import {resolve} from 'path';
+
+import * as Debug from 'debug';
+import * as minimist from 'minimist';
+
 import {SignatureType, isValidSignatureType} from './types';
+import {OpenFunctionContext} from './openfunction/function_context';
+
+const debug = Debug('common:options');
 
 /**
  * Error thrown when an invalid option is provided.
@@ -43,6 +49,10 @@ export interface FrameworkOptions {
    * The signature type of the client function.
    */
   signatureType: SignatureType;
+  /**
+   * The context to use for the function when serving.
+   */
+  context?: OpenFunctionContext;
   /**
    * Whether or not the --help CLI flag was provided.
    */
@@ -107,6 +117,23 @@ const SignatureOption = new ConfigurableOption(
     );
   }
 );
+const FunctionContextOption = new ConfigurableOption(
+  'context',
+  'FUNC_CONTEXT',
+  undefined,
+  x => {
+    // Try to parse context string
+    debug('ℹ️ Context loaded: %s', x);
+
+    try {
+      const context = JSON.parse(x);
+      return context as OpenFunctionContext;
+    } catch (e) {
+      debug('Failed to parse context: %s', e);
+      return undefined;
+    }
+  }
+);
 
 export const helpText = `Example usage:
   functions-framework --target=helloWorld --port=8080
@@ -130,6 +157,7 @@ export const parseOptions = (
       FunctionTargetOption.cliOption,
       SignatureOption.cliOption,
       SourceLocationOption.cliOption,
+      FunctionContextOption.cliOption,
     ],
   });
   return {
@@ -137,6 +165,7 @@ export const parseOptions = (
     target: FunctionTargetOption.parse(argv, envVars),
     sourceLocation: SourceLocationOption.parse(argv, envVars),
     signatureType: SignatureOption.parse(argv, envVars),
+    context: FunctionContextOption.parse(argv, envVars),
     printHelp: cliArgs[2] === '-h' || cliArgs[2] === '--help',
   };
 };

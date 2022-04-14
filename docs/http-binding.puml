@@ -1,0 +1,76 @@
+@startuml HTTP Binding
+
+box Function Process in Local Environment or Container
+control ENTRYPOINT
+participant Main
+participant Server
+participant Express [
+  Web Server
+  ----
+  ""Express""
+]
+participant Interceptor
+participant "User Function" as UserFunction
+participant DaprClient
+end box
+
+entity "Dapr Sidecar " as DaprSidecar
+
+== OpenFunction Serving ==
+
+ENTRYPOINT -> Main ** : execute
+note over ENTRYPOINT, Main: Pass through __CLI arguments__ and \ncontainer __environment variables__
+
+Main -> Main : load user function file
+note left: ""function (req, res) {}"" 
+
+Main -> Server ** : create
+note over Main, Server: Hand over __user function__, __function type__ \nand __context__ parsed from env variables 
+
+Server -> Express ** : new
+
+Server -> Express : use init middleware
+note over Server, Express: Store context in ""res.locals.context""
+
+Server -> Interceptor ** : new
+Server -> Express : use interceptor
+|||
+Server -> Express : use others middlewares
+|||
+Server -> UserFunction ** : wrap user function
+note over Server, UserFunction: Use Node.js ""Domain"" to run function and catch exceptions  
+Server -> Express : bind wrapper to "/*" route
+
+...
+
+== OpenFunction Invocation ==
+
+[-> Express ++ : HTTP request to "/"
+
+Express -> UserFunction ++ : execute user function
+UserFunction --> Express -- : return execution result "data"
+
+alt ""runtime"" = ""knative"" and ""outputs"" is not empty
+  Express -> Interceptor ++ : invoke interceptor
+
+  Interceptor -> Interceptor : load context
+  Interceptor -> DaprClient ** : new
+
+  loop each OpenFunction Output 
+    Interceptor -> DaprClient ++ : send "data"
+
+    DaprClient -> DaprSidecar ++ : invoke binding or publication with "data"
+    DaprSidecar --> DaprClient -- : return result 
+
+    DaprClient --> Interceptor -- : forward result
+  end
+
+  Interceptor -> DaprClient !!
+  Interceptor --> Express -- : return "data" as response
+end
+
+[<- Express -- : send response
+
+...
+
+@enduml

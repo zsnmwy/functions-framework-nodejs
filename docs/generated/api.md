@@ -38,7 +38,21 @@ export interface CloudFunctionsContext {
 }
 
 // @public
+export enum ComponentType {
+    Binding = "bindings",
+    PubSub = "pubsub"
+}
+
+// @public
 export type Context = CloudFunctionsContext | CloudEvent<unknown>;
+
+// @public
+export class ContextUtils {
+    static IsAsyncRuntime(context: OpenFunctionContext): boolean;
+    static IsBindingComponent(component: OpenFunctionComponent): boolean;
+    static IsKnativeRuntime(context: OpenFunctionContext): boolean;
+    static IsPubSubComponent(component: OpenFunctionComponent): boolean;
+}
 
 // @public
 export interface Data {
@@ -59,7 +73,7 @@ export interface EventFunctionWithCallback {
 }
 
 // @public
-export type HandlerFunction<T = unknown> = HttpFunction | EventFunction | EventFunctionWithCallback | CloudEventFunction<T> | CloudEventFunctionWithCallback<T>;
+export type HandlerFunction<T = unknown> = HttpFunction | EventFunction | EventFunctionWithCallback | CloudEventFunction<T> | CloudEventFunctionWithCallback<T> | OpenFunction;
 
 // @public
 export const http: (functionName: string, handler: HttpFunction) => void;
@@ -83,6 +97,40 @@ export interface LegacyEvent {
     };
 }
 
+// @public
+export interface OpenFunction {
+    // Warning: (ae-forgotten-export) The symbol "OpenFunctionRuntime" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    (ctx: OpenFunctionRuntime, data: {}): any;
+}
+
+// @public
+export interface OpenFunctionBinding {
+    [key: string]: OpenFunctionComponent;
+}
+
+// @public
+export interface OpenFunctionComponent {
+    componentName: string;
+    componentType: `${ComponentType}.${string}`;
+    metadata?: {
+        [key: string]: string;
+    };
+    operation?: string;
+    uri?: string;
+}
+
+// @public
+export interface OpenFunctionContext {
+    inputs?: OpenFunctionBinding;
+    name: string;
+    outputs?: OpenFunctionBinding;
+    port?: string;
+    runtime: keyof typeof RuntimeType;
+    version: string;
+}
+
 // @public (undocumented)
 interface Request_2 extends Request_3 {
     rawBody?: Buffer;
@@ -90,6 +138,12 @@ interface Request_2 extends Request_3 {
 export { Request_2 as Request }
 
 export { Response_2 as Response }
+
+// @public
+export enum RuntimeType {
+    Async = "Async",
+    Knative = "Knative"
+}
 
 // (No @packageDocumentation comment for this package)
 

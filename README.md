@@ -7,18 +7,19 @@
 > This is OpenFunction's nodejs functions-framework forked from [GCP functions-framework-nodejs](https://github.com/GoogleCloudPlatform/functions-framework-nodejs)
 
 An open source FaaS (Function as a Service) framework based on [Express](https://expressjs.com/)
-for writing portable Node.js functions
+ and [Restana](https://github.com/BackendStack21/restana) for writing portable sync and async Node.js functions.
 
 The Functions Framework lets you write lightweight functions that run in many
 different environments, including:
 
-*   [Google Cloud Functions](https://cloud.google.com/functions/)
-*   Your local development machine
-*   [Cloud Run](https://cloud.google.com/run/) and [Cloud Run for Anthos](https://cloud.google.com/anthos/run)
-*   [Knative](https://github.com/knative/)-based environments
-*   [OpenFunction](https://github.com/OpenFunction/OpenFunction)
+* [OpenFunction](https://github.com/OpenFunction/OpenFunction)
+* [Knative](https://github.com/knative/)-based environments
+* [Dapr](https://dapr.io/)-based environments
+* [Google Cloud Functions](https://cloud.google.com/functions/)
+* [Cloud Run](https://cloud.google.com/run/) and [Cloud Run for Anthos](https://cloud.google.com/anthos/run)
+* Your local development machine
 
-The framework allows you to go from:
+Generally speaking, the framework allows you to go from:
 
 ```js
 /**
@@ -38,18 +39,17 @@ curl http://my-url
 # Output: Hello, World!
 ```
 
-All without needing to worry about writing an HTTP server or complicated request
-handling logic.
+All without needing to worry about writing an HTTP server or complicated request handling logic.
 
 > Watch [this video](https://youtu.be/yMEcyAkTliU?t=912) to learn more about the Node Functions Framework.
 
 ## Features
 
-- Spin up a local development server for quick testing
-- Invoke a function in response to a request
-- Automatically unmarshal events conforming to the
-  [CloudEvents](https://cloudevents.io/) spec
-- Portable between serverless platforms
+* Spin up a local development server for quick testing
+* Invoke a function in response to a request
+* Listen and respond to the events bridged from Dapr system
+* Automatically unmarshal events conforming to the [CloudEvents](https://cloudevents.io/) spec
+* Portable between serverless platforms
 
 ## Installation
 
@@ -61,7 +61,7 @@ npm install @openfunction/functions-framework
 
 ## Quickstarts
 
-### Quickstart: Hello, World on your local machine
+### Quickstart: "Hello, World" on your local machine
 
 1. Create an `index.js` file with the following contents:
 
@@ -77,7 +77,7 @@ npm install @openfunction/functions-framework
     npx @openfunction/functions-framework --target=helloWorld
     ```
 
-1. Open http://localhost:8080/ in your browser and see _Hello, World_.
+1. Open <http://localhost:8080/> in your browser and see _Hello, World_.
 
 ### Quickstart: Set up a new project
 
@@ -117,6 +117,7 @@ command-line arguments:
     ...
     Serving function...
     Function: helloWorld
+    Signature type: http
     URL: http://localhost:8080/
     ```
 
@@ -129,10 +130,10 @@ command-line arguments:
 
 ### Quickstart: Build a Deployable Container
 
-1. Install [Docker](https://store.docker.com/search?type=edition&offering=community) and the [`pack` tool](https://buildpacks.io/docs/install-pack/).
+1. Install [Docker](https://store.docker.com/search?type=edition&offering=community) and the [pack](https://buildpacks.io/docs/install-pack/) tool.
 
-1. Build a container from your function using the Functions [buildpacks](https://github.com/GoogleCloudPlatform/buildpacks):
-	
+2. Build a container from your function using the [Cloud Native Buildpacks](https://buildpacks.io/):
+
     ```sh
     pack build \
       --builder openfunction/builder-node:v2-16.13 \
@@ -141,43 +142,21 @@ command-line arguments:
       my-first-function
     ```
 
-1. Start the built container:
-    
+3. Start the built function container:
+
     ```sh
-    docker run --rm -p 8080:8080 my-first-function
+    docker run --rm -p 8080:8080 -e NODE_ENV=dev my-first-function
     # Output: Serving function...
     ```
 
-1. Send requests to this function using `curl` from another terminal window:
-    
+    > NOTICE: `-e NODE_ENV=dev` is required to display "Serving function...", and you can also append `-e DEBUG=*` to display Express internal debug messages.
+
+4. Send requests to this function using `curl` from another terminal window:
+
     ```sh
     curl localhost:8080
     # Output: Hello, World!
     ```
-
-## Run your function on serverless platforms
-
-### Google Cloud Functions
-
-The
-[Node.js 10 runtime on Google Cloud Functions](https://cloud.google.com/functions/docs/concepts/nodejs-10-runtime)
-is based on the Functions Framework. On Cloud Functions, the Functions Framework
-is completely optional: if you don't add it to your `package.json`, it will be
-installed automatically.
-
-After you've written your function, you can simply deploy it from your local
-machine using the `gcloud` command-line tool.
-[Check out the Cloud Functions quickstart](https://cloud.google.com/functions/docs/quickstart).
-
-### Cloud Run / Cloud Run for Anthos
-
-After you've written your function, added the Functions Framework and updated your `start` script in `package.json`, deploy it to Cloud Run with `gcloud run deploy`. Check out the [Cloud Run quickstart for Node.js](https://cloud.google.com/run/docs/quickstarts/build-and-deploy/nodejs).
-
-If you want even more control over the environment, you can [deploy to Cloud Run for Anthos](https://cloud.google.com/anthos/run/docs/quickstarts/prebuilt-deploy-gke). With Cloud Run for Anthos, you can run your function on a GKE cluster, which gives you additional control over the environment (including use of GPU-based instances, longer timeouts and more).
-
-### Container environments based on Knative
-
-Cloud Run and Cloud Run for Anthos both implement the [Knative Serving API](https://www.knative.dev/docs/). The Functions Framework is designed to be compatible with Knative environments. Just build and deploy your container to a Knative environment.
 
 ## Configure the Functions Framework
 
@@ -201,34 +180,39 @@ For example:
   }
 ```
 
-## Enable Google Cloud Functions Events
+## Run your function on Serverless platforms
 
-The Functions Framework can unmarshall incoming
-Google Cloud Functions [event](https://cloud.google.com/functions/docs/concepts/events-triggers#events) payloads to `data` and `context` objects.
-These will be passed as arguments to your function when it receives a request.
-Note that your function must use the `event`-style function signature:
+### Container environments based on Knative
 
-```js
-exports.helloEvents = (data, context) => {
-  console.log(data);
-  console.log(context);
-};
-```
+The Functions Framework is designed to be compatible with Knative environments. Build and deploy your container to a Knative environment.
 
-To enable automatic unmarshalling, set the function signature type to `event`
-using a command-line flag or an environment variable. By default, the HTTP
-signature will be used and automatic event unmarshalling will be disabled.
+### OpenFunction
 
-For more details on this signature type, check out the Google Cloud Functions
-documentation on
-[background functions](https://cloud.google.com/functions/docs/writing/background#cloud_pubsub_example).
+![OpenFunction Platform Overview](https://openfunction.dev/openfunction-0.5-architecture.png)
+
+Besides Knative function support, one notable feature of OpenFunction is embracing Dapr system, so far Dapr pub/sub and bindings have been support.
+
+Dapr bindings allows you to trigger your applications or services with events coming in from external systems, or interface with external systems. OpenFunction [0.6.0 release](https://openfunction.dev/blog/2022/03/25/announcing-openfunction-0.6.0-faas-observability-http-trigger-and-more/) adds Dapr output bindings to its synchronous functions which enables HTTP triggers for asynchronous functions. For example, synchronous functions backed by the Knative runtime can now interact with middlewares defined by Dapr output binding or pub/sub, and an asynchronous function will be triggered by the events sent from the synchronous function.
+
+Asynchronous function introduces Dapr pub/sub to provide a platform-agnostic API to send and receive messages. A typical use case is that you can leverage synchronous functions to receive an event in plain JSON or Cloud Events format, and then send the received event to a Dapr output binding or pub/sub component, most likely a message queue (e.g. Kafka, NATS Streaming, GCP PubSub, MQTT). Finally, the asynchronous function could be triggered from the message queue.
+
+More details would be brought up to you in some quickstart samples, stay tuned.
+
+### Google Cloud Functions
+
+The [Node.js 10 runtime on Google Cloud Functions](https://cloud.google.com/functions/docs/concepts/nodejs-10-runtime) is based on the Functions Framework. On Cloud Functions, the Functions Framework is completely optional: if you don't add it to your `package.json`, it will be installed automatically.
+
+After you've written your function, you can deploy it from your local machine using the `gcloud` command-line tool. [Check out the Cloud Functions quickstart](https://cloud.google.com/functions/docs/quickstart).
+
+### Cloud Run / Cloud Run for Anthos
+
+After you've written your function, added the Functions Framework and updated your `start` script in `package.json`, deploy it to Cloud Run with `gcloud run deploy`. Check out the [Cloud Run quickstart for Node.js](https://cloud.google.com/run/docs/quickstarts/build-and-deploy/nodejs).
+
+If you want even more control over the environment, you can [deploy to Cloud Run for Anthos](https://cloud.google.com/anthos/run/docs/quickstarts/prebuilt-deploy-gke). With Cloud Run for Anthos, you can run your function on a GKE cluster, which gives you additional control over the environment (including use of GPU-based instances, longer timeouts and more).
 
 ## Enable CloudEvents
 
-The Functions Framework can unmarshall incoming
-[CloudEvents](http://cloudevents.io) payloads to a `cloudevent` object.
-It will be passed as an argument to your function when it receives a request.
-Note that your function must use the `cloudevent`-style function signature:
+The Functions Framework can unmarshall incoming [CloudEvents](http://cloudevents.io) payloads to a `cloudevent` object. It will be passed as an argument to your function when it receives a request. Note that your function must use the `cloudevent`-style function signature:
 
 ```js
 const functions = require('@openfunction/functions-framework');
@@ -242,16 +226,6 @@ functions.cloudEvent('helloCloudEvents', (cloudevent) => {
   console.log(cloudevent.time);
   console.log(cloudevent.datacontenttype);
 });
-```
-
-To enable the CloudEvent functions, you must list the Functions Framework as a dependency in your `package.json`:
-
-```json
-{
-  "dependencies": {
-    "@openfunction/functions-framework": "~0.3.6"
-  }
-}
 ```
 
 Learn how to use CloudEvents in this [guide](docs/cloudevents.md).

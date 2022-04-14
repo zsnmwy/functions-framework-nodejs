@@ -21,3 +21,8 @@ export * from './functions';
  * @public
  */
 export {http, cloudEvent} from './function_registry';
+
+/**
+ * @public
+ */
+export * from './openfunction/function_context';

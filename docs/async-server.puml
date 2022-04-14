@@ -1,0 +1,61 @@
+@startuml Async Server
+
+box Function Process in Local Environment or Container
+control ENTRYPOINT
+participant Main
+participant AsyncServer
+participant DaprServer
+participant Restana [
+  Web Server
+  ----
+  ""Restana""
+]
+end box
+
+entity "Dapr Sidecar " as DaprSidecar
+
+== OpenFunction Serving ==
+
+ENTRYPOINT -> Main ** : execute
+note over ENTRYPOINT, Main: Pass through __CLI arguments__ and \ncontainer __environment variables__
+
+Main -> Main : load user function file
+note left: ""function (ctx, data) {}""
+
+Main -> AsyncServer ** : create
+note over Main, AsyncServer: Hand over __user function__ and __context__
+
+AsyncServer -> DaprServer ** : ""new""
+note over AsyncServer, DaprServer: Extract __port__ from __context__ and pass down
+
+DaprServer -> Restana ** : ""new""
+note over Restana: Super fast and minimalist framework \nfor building REST micro-services
+|||
+DaprServer --> DaprSidecar : Waiting till Dapr sidecar started
+note over DaprServer, DaprSidecar #FFAAAA: Using HTTP channel due to lack of good support of gRPC in Dapr Node.js SDK
+...
+AsyncServer -> DaprServer : register __user function__ as handler \nfor each of __inputs__ in __context__
+DaprServer -> Restana : add routes for Dapr style \nsubscriptions and input bindings
+
+...
+
+== OpenFunction Triggering ==
+
+DaprSidecar <--] : sub / input data
+
+DaprSidecar -> Restana ++ : Dapr request with "data"
+
+Restana -> Restana ++ : invoke user function
+
+alt 
+  Restana -> DaprSidecar ++ : publish data or invoke output binding
+  DaprSidecar --> Restana -- : execution result
+end
+
+return
+
+return server app response
+
+...
+
+@enduml

@@ -1,8 +1,19 @@
 {
   "dependencies": {
-    "@openfunction/functions-framework": "file:../../"
+    "@openfunction/functions-framework": "file:../../",
+    "concurrently": "file:../../node_modules/concurrently",
+    "debug": "file:../../node_modules/debug",
+    "env-cmd": "file:../../node_modules/env-cmd",
+    "wait-on": "file:../../node_modules/wait-on"
   },
   "scripts": {
-    "start": "functions-framework"
+    "start": "functions-framework",
+    "knative": "concurrently npm:knative:run:* npm:knative:test",
+    "knative:run:func": "cross-env DEBUG=test:*,common:*,ofn:* env-cmd -e knative functions-framework --target=tryKnative",
+    "knative:run:dapr": "dapr run -H 3500 -d ../data/components/http --log-level warn",
+    "knative:test": "wait-on tcp:3500 tcp:8080 && curl -s -d '{\"data\": \"hello\"}' -H 'Content-Type: application/json' localhost:8080",
+    "async": "concurrently npm:async:run:*",
+    "async:run:func": "cross-env DEBUG=test:*,common:*,ofn:* env-cmd -e async functions-framework --target=tryAsync",
+    "async:run:dapr": "dapr run -H 3500 -p 8080 -d ../data/components/cron --log-level info"
   }
 }
