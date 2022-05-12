@@ -2,7 +2,7 @@
 
 [![npm version](https://img.shields.io/npm/v/@openfunction/functions-framework.svg)](https://www.npmjs.com/package/@openfunction/functions-framework) [![npm downloads](https://img.shields.io/npm/dm/@openfunction/functions-framework.svg)](https://npmcharts.com/compare/@openfunction/functions-framework?minimal=true)
 
-[![Node unit CI][ff_node_unit_img]][ff_node_unit_link] [![Node lint CI][ff_node_lint_img]][ff_node_lint_link] [![Node conformace CI][ff_node_conformance_img]][ff_node_conformance_link]
+[![Node unit CI][ff_node_unit_img]][ff_node_unit_link] [![Node lint CI][ff_node_lint_img]][ff_node_lint_link]
 
 > This is OpenFunction's nodejs functions-framework forked from [GCP functions-framework-nodejs](https://github.com/GoogleCloudPlatform/functions-framework-nodejs)
 
