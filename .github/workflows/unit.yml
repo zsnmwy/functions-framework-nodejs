@@ -22,6 +22,8 @@ jobs:
         uses: dapr/setup-dapr@v1
         with:
           version: '1.5.1'
+      - name: Initialize Dapr
+        run: dapr init
       - name: Install dependencies
         run: npm install
       - name: Build TypeScript project
