@@ -14,7 +14,10 @@ export interface OpenFunctionContext {
   /**
    * The target runtime of the context.
    */
-  runtime: keyof typeof RuntimeType;
+  runtime:
+    | `${RuntimeType}`
+    | `${Capitalize<RuntimeType>}`
+    | `${Uppercase<RuntimeType>}`;
   /**
    * Optional port string of the server.
    */
@@ -64,7 +67,7 @@ export interface OpenFunctionComponent {
   /**
    * Optional metadata as hash map for the component.
    */
-  metadata?: {[key: string]: string};
+  metadata?: Record<string, string>;
 }
 
 /**
@@ -75,11 +78,11 @@ export enum RuntimeType {
   /**
    * The Knative type.
    */
-  Knative = 'Knative',
+  Knative = 'knative',
   /**
    * The async type.
    */
-  Async = 'Async',
+  Async = 'async',
 }
 
 /**
@@ -108,7 +111,7 @@ export class ContextUtils {
    * @returns A boolean value.
    */
   static IsKnativeRuntime(context: OpenFunctionContext): boolean {
-    return context?.runtime === RuntimeType.Knative;
+    return context?.runtime?.toLowerCase() === RuntimeType.Knative;
   }
   /**
    * Returns true if the runtime is Async.
@@ -116,7 +119,7 @@ export class ContextUtils {
    * @returns A boolean value.
    */
   static IsAsyncRuntime(context: OpenFunctionContext): boolean {
-    return context?.runtime === RuntimeType.Async;
+    return context?.runtime?.toLowerCase() === RuntimeType.Async;
   }
 
   /**
