@@ -114,9 +114,7 @@ export interface OpenFunctionBinding {
 export interface OpenFunctionComponent {
     componentName: string;
     componentType: `${ComponentType}.${string}`;
-    metadata?: {
-        [key: string]: string;
-    };
+    metadata?: Record<string, string>;
     operation?: string;
     uri?: string;
 }
@@ -127,7 +125,7 @@ export interface OpenFunctionContext {
     name: string;
     outputs?: OpenFunctionBinding;
     port?: string;
-    runtime: keyof typeof RuntimeType;
+    runtime: `${RuntimeType}` | `${Capitalize<RuntimeType>}` | `${Uppercase<RuntimeType>}`;
     version: string;
 }
 
@@ -141,8 +139,8 @@ export { Response_2 as Response }
 
 // @public
 export enum RuntimeType {
-    Async = "Async",
-    Knative = "Knative"
+    Async = "async",
+    Knative = "knative"
 }
 
 // (No @packageDocumentation comment for this package)

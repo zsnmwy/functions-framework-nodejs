@@ -1523,8 +1523,13 @@
                   "text": "metadata?: "
                 },
                 {
+                  "kind": "Reference",
+                  "text": "Record",
+                  "canonicalReference": "!Record:type"
+                },
+                {
                   "kind": "Content",
-                  "text": "{\n        [key: string]: string;\n    }"
+                  "text": "<string, string>"
                 },
                 {
                   "kind": "Content",
@@ -1536,7 +1541,7 @@
               "name": "metadata",
               "propertyTypeTokenRange": {
                 "startIndex": 1,
-                "endIndex": 2
+                "endIndex": 3
               }
             },
             {
@@ -1724,12 +1729,52 @@
                 },
                 {
                   "kind": "Content",
-                  "text": "keyof typeof "
+                  "text": "`${"
                 },
                 {
                   "kind": "Reference",
                   "text": "RuntimeType",
                   "canonicalReference": "@openfunction/functions-framework!RuntimeType:enum"
+                },
+                {
+                  "kind": "Content",
+                  "text": "}` | `${"
+                },
+                {
+                  "kind": "Reference",
+                  "text": "Capitalize",
+                  "canonicalReference": "!Capitalize:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": "<"
+                },
+                {
+                  "kind": "Reference",
+                  "text": "RuntimeType",
+                  "canonicalReference": "@openfunction/functions-framework!RuntimeType:enum"
+                },
+                {
+                  "kind": "Content",
+                  "text": ">}` | `${"
+                },
+                {
+                  "kind": "Reference",
+                  "text": "Uppercase",
+                  "canonicalReference": "!Uppercase:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": "<"
+                },
+                {
+                  "kind": "Reference",
+                  "text": "RuntimeType",
+                  "canonicalReference": "@openfunction/functions-framework!RuntimeType:enum"
+                },
+                {
+                  "kind": "Content",
+                  "text": ">}`"
                 },
                 {
                   "kind": "Content",
@@ -1741,7 +1786,7 @@
               "name": "runtime",
               "propertyTypeTokenRange": {
                 "startIndex": 1,
-                "endIndex": 3
+                "endIndex": 12
               }
             },
             {
@@ -1854,7 +1899,7 @@
                 },
                 {
                   "kind": "Content",
-                  "text": "\"Async\""
+                  "text": "\"async\""
                 }
               ],
               "releaseTag": "Public",
@@ -1875,7 +1920,7 @@
                 },
                 {
                   "kind": "Content",
-                  "text": "\"Knative\""
+                  "text": "\"knative\""
                 }
               ],
               "releaseTag": "Public",
