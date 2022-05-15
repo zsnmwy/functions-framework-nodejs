@@ -196,7 +196,44 @@ Dapr bindings allows you to trigger your applications or services with events co
 
 Asynchronous function introduces Dapr pub/sub to provide a platform-agnostic API to send and receive messages. A typical use case is that you can leverage synchronous functions to receive an event in plain JSON or Cloud Events format, and then send the received event to a Dapr output binding or pub/sub component, most likely a message queue (e.g. Kafka, NATS Streaming, GCP PubSub, MQTT). Finally, the asynchronous function could be triggered from the message queue.
 
-More details would be brought up to you in some quickstart samples, stay tuned.
+Async function use below function signature which is quite difference from that of Express style sync function:
+
+```js
+function (ctx, data) {}
+```
+
+* `ctx`: OpenFunction [context](https://github.com/OpenFunction/functions-framework-nodejs/blob/master/src/openfunction/function_context.ts) object
+  * `ctx.send(payload, output?)`: Send `payload` to all or one specific `output` of Dapr Output [Binding](https://docs.dapr.io/reference/components-reference/supported-bindings/) or Pub [Broker](https://docs.dapr.io/reference/components-reference/supported-pubsub/)
+  * Notice that `ctx.send` CAN be invoked where necessary, when you have certain outgoing data to send
+* `data`: Data recieved from Dapr Input Binding or Sub Broker
+
+For more details about async function and demo, please check out our [Node.js Async Function Quickstart](https://openfunction-talks.netlify.app/2022/202-node-async/).
+
+#### HTTP Trigger Async Function
+
+Sync functions is triggered by HTTP request, so Dapr is not used in sync function input. Whenever there are functions output requirements, sync functions can also send output to Dapr output binding or pubsub components.
+
+Here is another function sample:
+
+* Users send a HTTP request to a [Knative Sync function](https://github.com/OpenFunction/samples/tree/main/functions/knative/with-output-binding).
+* This sync function handles the request and then send its output to Kafka through a Dapr Kafka output binding or pubsub component.
+* An [async function](https://github.com/OpenFunction/samples/tree/main/functions/async/bindings/kafka-input) is then triggered by this output event in Kafka (through a Dapr Kafka input binding or pubsub component)
+
+![HTTP Trigger Async Function](https://raw.githubusercontent.com/OpenFunction/samples/main/images/knative-dapr.png)
+
+Node.js Functions Framework also supports such use case, you can switch Express function signature to typical async style as below example indicates:
+
+```js
+async function tryKnativeAsync(ctx, data) {
+  // Receive and handle data from HTTP request's body
+  console.log('Function should receive request: %o', data);
+
+  // Send output in async way via Dapr
+  await ctx.send(data);
+
+  // Use `response` method to prepare data as HTTP response
+  return ctx.response(data);
+```
 
 ### Google Cloud Functions
 
@@ -243,5 +280,3 @@ Contributions to this library are welcome and encouraged. See
 [ff_node_unit_link]:  https://github.com/openfunction/functions-framework-nodejs/actions?query=workflow%3A"Node.js+Unit+CI"
 [ff_node_lint_img]: https://github.com/openfunction/functions-framework-nodejs/workflows/Node.js%20Lint%20CI/badge.svg
 [ff_node_lint_link]:  https://github.com/openfunction/functions-framework-nodejs/actions?query=workflow%3A"Node.js+Lint+CI"
-[ff_node_conformance_img]: https://github.com/openfunction/functions-framework-nodejs/workflows/Node.js%20Conformance%20CI/badge.svg
-[ff_node_conformance_link]:  https://github.com/openfunction/functions-framework-nodejs/actions?query=workflow%3A"Node.js+Conformance+CI"

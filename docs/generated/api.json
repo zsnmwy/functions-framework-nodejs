@@ -1203,6 +1203,105 @@
           "extendsTokenRanges": []
         },
         {
+          "kind": "Interface",
+          "canonicalReference": "@openfunction/functions-framework!HttpFunctionResponse:interface",
+          "docComment": "/**\n * HTTP response ouput from OpenFunction async function\n *\n * @public\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export interface HttpFunctionResponse "
+            }
+          ],
+          "releaseTag": "Public",
+          "name": "HttpFunctionResponse",
+          "members": [
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "@openfunction/functions-framework!HttpFunctionResponse#body:member",
+              "docComment": "/**\n * Body of the response.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "body?: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "any"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isOptional": true,
+              "releaseTag": "Public",
+              "name": "body",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "@openfunction/functions-framework!HttpFunctionResponse#code:member",
+              "docComment": "/**\n * Status code of the response.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "code?: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isOptional": true,
+              "releaseTag": "Public",
+              "name": "code",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "@openfunction/functions-framework!HttpFunctionResponse#headers:member",
+              "docComment": "/**\n * Headers of the response.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "headers?: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "Record",
+                  "canonicalReference": "!Record:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": "<string, string>"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isOptional": true,
+              "releaseTag": "Public",
+              "name": "headers",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 3
+              }
+            }
+          ],
+          "extendsTokenRanges": []
+        },
+        {
           "kind": "TypeAlias",
           "canonicalReference": "@openfunction/functions-framework!LegacyCloudFunctionsContext:type",
           "docComment": "/**\n * A legacy event function context.\n *\n * @public\n */\n",
@@ -1309,7 +1408,7 @@
         {
           "kind": "Interface",
           "canonicalReference": "@openfunction/functions-framework!OpenFunction:interface",
-          "docComment": "/**\n * A OpenFunction async function handler.\n *\n * @public\n */\n",
+          "docComment": "/**\n * An OpenFunction async function handler.\n *\n * @public\n */\n",
           "excerptTokens": [
             {
               "kind": "Content",
@@ -1817,6 +1916,348 @@
             }
           ],
           "extendsTokenRanges": []
+        },
+        {
+          "kind": "Class",
+          "canonicalReference": "@openfunction/functions-framework!OpenFunctionRuntime:class",
+          "docComment": "/**\n * The OpenFunction's serving runtime abstract class.\n *\n * @public\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export declare abstract class OpenFunctionRuntime "
+            }
+          ],
+          "releaseTag": "Public",
+          "name": "OpenFunctionRuntime",
+          "members": [
+            {
+              "kind": "Constructor",
+              "canonicalReference": "@openfunction/functions-framework!OpenFunctionRuntime:constructor(1)",
+              "docComment": "/**\n * Constructor of the OpenFunctionRuntime.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "constructor(context: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "OpenFunctionContext",
+                  "canonicalReference": "@openfunction/functions-framework!OpenFunctionContext:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": ");"
+                }
+              ],
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "context",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "Property",
+              "canonicalReference": "@openfunction/functions-framework!OpenFunctionRuntime#context:member",
+              "docComment": "/**\n * The context of the OpenFunction.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "readonly context: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "OpenFunctionContext",
+                  "canonicalReference": "@openfunction/functions-framework!OpenFunctionContext:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "context",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "isStatic": false
+            },
+            {
+              "kind": "Method",
+              "canonicalReference": "@openfunction/functions-framework!OpenFunctionRuntime.Parse:member(1)",
+              "docComment": "/**\n * Static method to parse the context and get runtime.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "static Parse(context: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "OpenFunctionContext",
+                  "canonicalReference": "@openfunction/functions-framework!OpenFunctionContext:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "OpenFunctionRuntime",
+                  "canonicalReference": "@openfunction/functions-framework!OpenFunctionRuntime:class"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isOptional": false,
+              "isStatic": true,
+              "returnTypeTokenRange": {
+                "startIndex": 3,
+                "endIndex": 4
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "context",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  }
+                }
+              ],
+              "name": "Parse"
+            },
+            {
+              "kind": "Method",
+              "canonicalReference": "@openfunction/functions-framework!OpenFunctionRuntime.ProxyContext:member(1)",
+              "docComment": "/**\n * It creates a proxy for the runtime object, which delegates all property access to the runtime object\n *\n * @param context - The context object to be proxied.\n *\n * @returns The proxy object.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "static ProxyContext(context: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "OpenFunctionContext",
+                  "canonicalReference": "@openfunction/functions-framework!OpenFunctionContext:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "OpenFunctionRuntime",
+                  "canonicalReference": "@openfunction/functions-framework!OpenFunctionRuntime:class"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isOptional": false,
+              "isStatic": true,
+              "returnTypeTokenRange": {
+                "startIndex": 3,
+                "endIndex": 4
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "context",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  }
+                }
+              ],
+              "name": "ProxyContext"
+            },
+            {
+              "kind": "Method",
+              "canonicalReference": "@openfunction/functions-framework!OpenFunctionRuntime#response:member(1)",
+              "docComment": "/**\n * It returns an HTTP style response object with a `code`, `headers`, and `body` property\n *\n * @param body - The data you want to send back to the client.\n *\n * @param code - The HTTP status code to return.\n *\n * @param headers - An object containing the headers to be sent with the response.\n *\n * @returns A function that takes in data, code, and headers and returns an response object.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "response(body: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "unknown"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", code?: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", headers?: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "Record",
+                  "canonicalReference": "!Record:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": "<string, string>"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "HttpFunctionResponse",
+                  "canonicalReference": "@openfunction/functions-framework!HttpFunctionResponse:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isOptional": false,
+              "isStatic": false,
+              "returnTypeTokenRange": {
+                "startIndex": 8,
+                "endIndex": 9
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "body",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  }
+                },
+                {
+                  "parameterName": "code",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 3,
+                    "endIndex": 4
+                  }
+                },
+                {
+                  "parameterName": "headers",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 5,
+                    "endIndex": 7
+                  }
+                }
+              ],
+              "name": "response"
+            },
+            {
+              "kind": "Method",
+              "canonicalReference": "@openfunction/functions-framework!OpenFunctionRuntime#send:member(1)",
+              "docComment": "/**\n * The promise that send data to certain ouput.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "abstract send(data: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "object"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", output?: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "string"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "Promise",
+                  "canonicalReference": "!Promise:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": "<object>"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isOptional": false,
+              "isStatic": false,
+              "returnTypeTokenRange": {
+                "startIndex": 5,
+                "endIndex": 7
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "data",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  }
+                },
+                {
+                  "parameterName": "output",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 3,
+                    "endIndex": 4
+                  }
+                }
+              ],
+              "name": "send"
+            },
+            {
+              "kind": "Property",
+              "canonicalReference": "@openfunction/functions-framework!OpenFunctionRuntime#sidecarPort:member",
+              "docComment": "/**\n * Getter for the port of Dapr sidecar\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "get sidecarPort(): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "{\n        HTTP: string;\n        GRRC: string;\n    }"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "sidecarPort",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "isStatic": false
+            }
+          ],
+          "implementsTokenRanges": []
         },
         {
           "kind": "Interface",

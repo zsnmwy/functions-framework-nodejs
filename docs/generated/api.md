@@ -85,6 +85,13 @@ export interface HttpFunction {
 }
 
 // @public
+export interface HttpFunctionResponse {
+    body?: any;
+    code?: number;
+    headers?: Record<string, string>;
+}
+
+// @public
 export type LegacyCloudFunctionsContext = CloudFunctionsContext | Data;
 
 // @public
@@ -99,8 +106,6 @@ export interface LegacyEvent {
 
 // @public
 export interface OpenFunction {
-    // Warning: (ae-forgotten-export) The symbol "OpenFunctionRuntime" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
     (ctx: OpenFunctionRuntime, data: {}): any;
 }
@@ -127,6 +132,20 @@ export interface OpenFunctionContext {
     port?: string;
     runtime: `${RuntimeType}` | `${Capitalize<RuntimeType>}` | `${Uppercase<RuntimeType>}`;
     version: string;
+}
+
+// @public
+export abstract class OpenFunctionRuntime {
+    constructor(context: OpenFunctionContext);
+    readonly context: OpenFunctionContext;
+    static Parse(context: OpenFunctionContext): OpenFunctionRuntime;
+    static ProxyContext(context: OpenFunctionContext): OpenFunctionRuntime;
+    response(body: unknown, code?: number, headers?: Record<string, string>): HttpFunctionResponse;
+    abstract send(data: object, output?: string): Promise<object>;
+    get sidecarPort(): {
+        HTTP: string;
+        GRRC: string;
+    };
 }
 
 // @public (undocumented)
