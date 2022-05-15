@@ -24,13 +24,12 @@ import {cloudEventToBackgroundEventMiddleware} from './middleware/cloud_event_to
 import {backgroundEventToCloudEventMiddleware} from './middleware/background_event_to_cloud_event';
 import {wrapUserFunction} from './function_wrappers';
 
-import daprOutputMiddleware from './openfunction/dapr_output_middleware';
-
 /**
  * Creates and configures an Express application and returns an HTTP server
  * which will run it.
  * @param userFunction User's function.
  * @param functionSignatureType Type of user's function signature.
+ * @param context Optional context object.
  * @return HTTP server.
  */
 export function getServer(
@@ -52,9 +51,6 @@ export function getServer(
     res.locals.functionExecutionFinished = false;
     next();
   });
-
-  // Use OpenFunction middlewares
-  app.use(daprOutputMiddleware);
 
   /**
    * Retains a reference to the raw body buffer to allow access to the raw body
@@ -139,7 +135,11 @@ export function getServer(
   }
 
   // Set up the routes for the user's function
-  const requestHandler = wrapUserFunction(userFunction, functionSignatureType);
+  const requestHandler = wrapUserFunction(
+    userFunction,
+    functionSignatureType,
+    context
+  );
   if (functionSignatureType === 'http') {
     app.all('/*', requestHandler);
   } else {

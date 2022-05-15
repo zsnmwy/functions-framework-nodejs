@@ -14,6 +14,10 @@
 
 // eslint-disable-next-line node/no-deprecated-api
 import * as domain from 'domain';
+
+import * as Debug from 'debug';
+import {get, isEmpty} from 'lodash';
+
 import {Request, Response, RequestHandler} from 'express';
 import {sendCrashResponse} from './logger';
 import {sendResponse} from './invoker';
@@ -27,8 +31,13 @@ import {
   CloudEventFunctionWithCallback,
   HandlerFunction,
 } from './functions';
-import {CloudEvent} from './functions';
+import {CloudEvent, OpenFunction} from './functions';
 import {SignatureType} from './types';
+
+import {OpenFunctionContext} from './openfunction/function_context';
+import {OpenFunctionRuntime} from './openfunction/function_runtime';
+
+const debug = Debug('common:wrapper');
 
 /**
  * The handler function used to signal completion of event functions.
@@ -122,6 +131,37 @@ const wrapHttpFunction = (execute: HttpFunction): RequestHandler => {
   };
 };
 
+const wrapHttpAsyncFunction = (
+  userFunction: OpenFunction,
+  context: OpenFunctionContext
+): RequestHandler => {
+  const ctx = OpenFunctionRuntime.ProxyContext(context);
+  const httpHandler = (req: Request, res: Response) => {
+    const callback = getOnDoneCallback(res);
+
+    Promise.resolve()
+      .then(() => userFunction(ctx, req.body))
+      .then(result => {
+        debug('ℹ️ User function returned: %j', result);
+
+        const data = get(result, 'body');
+        const code = get(result, 'code', 200);
+        const headers = get(result, 'headers');
+
+        !isEmpty(headers) && res.set(headers);
+
+        if (data !== undefined) {
+          res.status(code).send(data);
+        } else {
+          res.status(code).end();
+        }
+      })
+      .catch(err => callback(err, undefined));
+  };
+
+  return wrapHttpFunction(httpHandler);
+};
+
 /**
  * Wraps an async CloudEvent function in an express RequestHandler.
  * @param userFunction User's function.
@@ -202,10 +242,16 @@ const wrapEventFunctionWithCallback = (
  */
 export const wrapUserFunction = <T = unknown>(
   userFunction: HandlerFunction<T>,
-  signatureType: SignatureType
+  signatureType: SignatureType,
+  context?: object
 ): RequestHandler => {
   switch (signatureType) {
     case 'http':
+      if (!isEmpty((context as OpenFunctionContext)?.outputs))
+        return wrapHttpAsyncFunction(
+          userFunction as OpenFunction,
+          context as OpenFunctionContext
+        );
       return wrapHttpFunction(userFunction as HttpFunction);
     case 'event':
       // Callback style if user function has more than 2 arguments.

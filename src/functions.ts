@@ -78,11 +78,36 @@ export interface CloudEventFunctionWithCallback<T = unknown> {
 }
 
 /**
- * A OpenFunction async function handler.
+ * An OpenFunction async function handler.
  * @public
  */
 export interface OpenFunction {
   (ctx: OpenFunctionRuntime, data: {}): any;
+}
+
+/**
+ * OpenFunction runtime as the context handler.
+ * @public
+ */
+export {OpenFunctionRuntime};
+
+/**
+ * HTTP response ouput from OpenFunction async function
+ * @public
+ */
+export interface HttpFunctionResponse {
+  /**
+   * Status code of the response.
+   */
+  code?: number;
+  /**
+   * Headers of the response.
+   */
+  headers?: Record<string, string>;
+  /**
+   * Body of the response.
+   */
+  body?: any;
 }
 
 /**

@@ -1,4 +1,4 @@
-import {forEach, has, get} from 'lodash';
+import {forEach} from 'lodash';
 import {DaprServer} from 'dapr-client';
 
 import {OpenFunction} from '../functions';
@@ -20,7 +20,7 @@ export default function (
   context: OpenFunctionContext
 ): AsyncFunctionServer {
   const app = new DaprServer('localhost', context.port);
-  const ctx = getContextProxy(context);
+  const ctx = OpenFunctionRuntime.ProxyContext(context);
 
   const wrapper = async (data: object) => {
     await userFunction(ctx, data);
@@ -43,24 +43,4 @@ export default function (
   });
 
   return app;
-}
-
-/**
- * It creates a proxy for the runtime object, which delegates all property access to the runtime object
- * @param {OpenFunctionContext} context - The context object to be proxied.
- * @returns The proxy object.
- */
-function getContextProxy(context: OpenFunctionContext): OpenFunctionRuntime {
-  // Get a proper runtime for the context
-  const runtime = OpenFunctionRuntime.Parse(context);
-
-  // Create a proxy for the context
-  return new Proxy(runtime, {
-    get: (target, prop) => {
-      // Provide delegated property access of the context object
-      if (has(target.context, prop)) return get(target.context, prop);
-      // Otherwise, return the property of the runtime object
-      else return Reflect.get(target, prop);
-    },
-  });
 }

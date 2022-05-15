@@ -1,7 +1,9 @@
 import {env} from 'process';
 
-import {chain} from 'lodash';
+import {chain, get, has} from 'lodash';
 import {DaprClient, CommunicationProtocolEnum} from 'dapr-client';
+
+import {HttpFunctionResponse} from '../functions';
 
 import {
   OpenFunctionComponent,
@@ -11,6 +13,7 @@ import {
 
 /**
  * The OpenFunction's serving runtime abstract class.
+ * @public
  */
 export abstract class OpenFunctionRuntime {
   /**
@@ -33,6 +36,26 @@ export abstract class OpenFunctionRuntime {
   }
 
   /**
+   * It creates a proxy for the runtime object, which delegates all property access to the runtime object
+   * @param context - The context object to be proxied.
+   * @returns The proxy object.
+   */
+  static ProxyContext(context: OpenFunctionContext): OpenFunctionRuntime {
+    // Get a proper runtime for the context
+    const runtime = OpenFunctionRuntime.Parse(context);
+
+    // Create a proxy for the context
+    return new Proxy(runtime, {
+      get: (target, prop) => {
+        // Provide delegated property access of the context object
+        if (has(target.context, prop)) return get(target.context, prop);
+        // Otherwise, return the property of the runtime object
+        else return Reflect.get(target, prop);
+      },
+    });
+  }
+
+  /**
    * Getter for the port of Dapr sidecar
    */
   get sidecarPort() {
@@ -43,7 +66,26 @@ export abstract class OpenFunctionRuntime {
   }
 
   /**
-   * The promise that send data to certain ouput binding or pubsub topic.
+   * It returns an HTTP style response object with a `code`, `headers`, and `body` property
+   * @param body - The data you want to send back to the client.
+   * @param code - The HTTP status code to return.
+   * @param headers - An object containing the headers to be sent with the response.
+   * @returns A function that takes in data, code, and headers and returns an response object.
+   */
+  response(
+    body: unknown,
+    code = 200,
+    headers?: Record<string, string>
+  ): HttpFunctionResponse {
+    return {
+      code,
+      headers,
+      body,
+    };
+  }
+
+  /**
+   * The promise that send data to certain ouput.
    */
   abstract send(data: object, output?: string): Promise<object>;
 }
