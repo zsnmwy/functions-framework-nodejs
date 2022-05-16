@@ -19,7 +19,12 @@ export const FUNCTION_STATUS_HEADER_FIELD = 'X-Google-Status';
 /**
  * List of function signature types that are supported by the framework.
  */
-export const SignatureType = ['http', 'event', 'cloudevent'] as const;
+export const SignatureType = [
+  'http',
+  'event',
+  'cloudevent',
+  'openfunction',
+] as const;
 
 /**
  * Union type of all valid function SignatureType values.

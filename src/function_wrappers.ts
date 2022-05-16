@@ -131,7 +131,7 @@ const wrapHttpFunction = (execute: HttpFunction): RequestHandler => {
   };
 };
 
-const wrapHttpAsyncFunction = (
+const wrapOpenFunction = (
   userFunction: OpenFunction,
   context: OpenFunctionContext
 ): RequestHandler => {
@@ -247,12 +247,12 @@ export const wrapUserFunction = <T = unknown>(
 ): RequestHandler => {
   switch (signatureType) {
     case 'http':
-      if (!isEmpty((context as OpenFunctionContext)?.outputs))
-        return wrapHttpAsyncFunction(
-          userFunction as OpenFunction,
-          context as OpenFunctionContext
-        );
       return wrapHttpFunction(userFunction as HttpFunction);
+    case 'openfunction':
+      return wrapOpenFunction(
+        userFunction as OpenFunction,
+        context as OpenFunctionContext
+      );
     case 'event':
       // Callback style if user function has more than 2 arguments.
       if (userFunction!.length > 2) {

@@ -86,7 +86,7 @@ describe('OpenFunction - HTTP Binding', () => {
           await ctx.send(data);
           return ctx.response(data);
         },
-        'http',
+        'openfunction',
         context
       );
 

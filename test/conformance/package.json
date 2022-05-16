@@ -7,9 +7,9 @@
     "wait-on": "file:../../node_modules/wait-on"
   },
   "scripts": {
-    "start": "functions-framework",
+    "start": "functions-framework --target=writeHttp",
     "knative:async": "concurrently npm:knative:async:run:* npm:knative:async:test",
-    "knative:async:run:func": "cross-env DEBUG=test:*,common:*,ofn:* env-cmd -e knative functions-framework --target=tryKnativeAsync",
+    "knative:async:run:func": "cross-env DEBUG=test:*,common:*,ofn:* env-cmd -e knative functions-framework --signature-type=openfunction --target=tryKnativeAsync",
     "knative:async:run:dapr": "dapr run -H 3500 -d ../data/components/http --log-level warn",
     "knative:async:test": "wait-on tcp:3500 tcp:8080 && curl -s -d '{\"data\": \"hello\"}' -H 'Content-Type: application/json' localhost:8080",
     "async": "concurrently npm:async:run:*",
