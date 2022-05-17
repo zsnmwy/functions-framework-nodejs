@@ -168,7 +168,7 @@ ignored.
 | ------------------ | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `--port`           | `PORT`                    | The port on which the Functions Framework listens for requests. Default: `8080`                                                                                                                                  |
 | `--target`         | `FUNCTION_TARGET`         | The name of the exported function to be invoked in response to requests. Default: `function`                                                                                                                     |
-| `--signature-type` | `FUNCTION_SIGNATURE_TYPE` | The signature used when writing your function. Controls unmarshalling rules and determines which arguments are used to invoke your function. Default: `http`; accepted values: `http` or `event` or `cloudevent` |
+| `--signature-type` | `FUNCTION_SIGNATURE_TYPE` | The signature used when writing your function. Controls unmarshalling rules and determines which arguments are used to invoke your function. Default: `http`; accepted values: `http` or `event` or `cloudevent` or `openfunction` |
 | `--source`         | `FUNCTION_SOURCE`         | The path to the directory of your function. Default: `cwd` (the current working directory)                                                                                                                       |
 
 You can set command-line flags in your `package.json` via the `start` script.
@@ -231,8 +231,16 @@ async function tryKnativeAsync(ctx, data) {
   // Send output in async way via Dapr
   await ctx.send(data);
 
-  // Use `response` method to prepare data as HTTP response
-  return ctx.response(data);
+  // Use `ctx.res` object to deal with HTTP response
+  ctx.res.send(data);
+```
+
+Remember that you also need set command-line flags `--signature-type=openfunction`, for example in your `package.json` via the `start` script:
+
+```js
+  "scripts": {
+    "start": "functions-framework --signature-type=openfunction --target=tryKnativeAsync"
+  }
 ```
 
 ### Google Cloud Functions

@@ -1,26 +1,16 @@
 # How to Contribute
 
-We'd love to accept your patches and contributions to this project. There are
-just a few small guidelines you need to follow.
+We'd love to accept your patches and contributions to this project. There are a few small guidelines you need to follow.
 
 ## Contributor License Agreement
 
-Contributions to this project must be accompanied by a Contributor License
-Agreement. You (or your employer) retain the copyright to your contribution;
-this simply gives us permission to use and redistribute your contributions as
-part of the project. Head over to <https://cla.developers.google.com/> to see
-your current agreements on file or to sign a new one.
+Contributions to this project must be accompanied by a  Developer Certificate of Origin (DCO). You (or your employer) retain the copyright to your contribution; this gives us permission to use and redistribute your contributions as part of the project. Head over to <https://developercertificate.org/> to see your current agreements on file or to sign a new one.
 
-You generally only need to submit a CLA once, so if you've already submitted one
-(even if it was for a different project), you probably don't need to do it
-again.
+You only need to submit a DTO once, so if you've already submitted one (even if it was for a different project), you probably don't need to do it again.
 
 ## Code reviews
 
-All submissions, including submissions by project members, require review. We
-use GitHub pull requests for this purpose. Consult
-[GitHub Help](https://help.github.com/articles/about-pull-requests/) for more
-information on using pull requests.
+All submissions, including submissions by project members, require review. We use GitHub pull requests for this purpose. Consult [GitHub Help](https://help.github.com/articles/about-pull-requests/) for more information on using pull requests.
 
 ## Testing
 
@@ -28,34 +18,27 @@ information on using pull requests.
 
 All pull requests should have an associated test to ensure foward compatibility.
 
+> Make sure you have installed [Dapr](https://dapr.io/) before running unit tests, check out [Install Dapr CLI](https://docs.dapr.io/getting-started/install-dapr-cli/) for more details
+
 To run an individual test, you can run a command such as the following:
 
-```
+```sh
 npm run test -- -g 'loading function'
-```
-
-### Conformance Tests
-
-To run the conformance tests, first install Go 1.16+, then run the tests:
-
-```
-npm run conformance
 ```
 
 ### Manual Testing
 
-When developing a feature locally, you can install a local version of the Functions Framework
-using `npm link`. First compile your local clone of the Functions Framework:
+When developing a feature locally, you can install a local version of the Functions Framework using `npm link`. First compile your local clone of the Functions Framework:
 
 > You'll need to install typescript first by: `npm install typescript --save-dev`
 
-```
+```sh
 npx tsc
 ```
 
 Then link the Functions Framework using `npm link`.
 
-```
+```sh
 npm link
 ```
 
@@ -65,7 +48,7 @@ You can then run the Functions Framework locally using `functions-framework`.
 
 This module is published using Release Please. When you merge a release PR, the npm package will be automatically published.
 
-```shell
+```sh
 # Login to npm registry, contact repo admin for https://www.npmjs.com/ user name and password
 npm login
 # First run a dry run to find out errors
@@ -73,6 +56,7 @@ npm publish ./ --access public --dry-run
 # Then publish the package
 npm publish --access public
 ```
+
 ### Reverting a Publish
 
 If the release process fails, you can revert the publish by running the following (i.e. unpublishing `1.10.0`):
@@ -101,5 +85,4 @@ The docs will be generated in [`docs/generated/`](docs/generated/).
 
 ## Community Guidelines
 
-This project follows [Google's Open Source Community
-Guidelines](https://opensource.google.com/conduct/).
+This project follows [CNCF openness guidelines](https://www.cncf.io/blog/2019/06/11/cncf-openness-guidelines/).
