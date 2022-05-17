@@ -1,15 +1,29 @@
 import {env} from 'process';
 
-import {chain, get, has} from 'lodash';
+import {chain, get, has, extend} from 'lodash';
+import {Request, Response} from 'express';
 import {DaprClient, CommunicationProtocolEnum} from 'dapr-client';
-
-import {HttpFunctionResponse} from '../functions';
 
 import {
   OpenFunctionComponent,
   OpenFunctionContext,
   ContextUtils,
 } from './function_context';
+
+/**
+ * Defining the interface of the HttpTarget.
+ * @public
+ */
+export interface HttpTrigger {
+  req?: Request;
+  res?: Response;
+}
+
+/**
+ * Defining the type union of OpenFunction trigger.
+ * @public
+ */
+export type OpenFunctionTrigger = HttpTrigger;
 
 /**
  * The OpenFunction's serving runtime abstract class.
@@ -19,7 +33,12 @@ export abstract class OpenFunctionRuntime {
   /**
    * The context of the OpenFunction.
    */
-  readonly context: OpenFunctionContext;
+  protected readonly context: OpenFunctionContext;
+
+  /**
+   * The optional trigger of OpenFunction.
+   */
+  protected trigger?: OpenFunctionTrigger;
 
   /**
    * Constructor of the OpenFunctionRuntime.
@@ -66,22 +85,28 @@ export abstract class OpenFunctionRuntime {
   }
 
   /**
-   * It returns an HTTP style response object with a `code`, `headers`, and `body` property
-   * @param body - The data you want to send back to the client.
-   * @param code - The HTTP status code to return.
-   * @param headers - An object containing the headers to be sent with the response.
-   * @returns A function that takes in data, code, and headers and returns an response object.
+   * Getter returns the request object from the trigger.
+   * @returns The request object.
    */
-  response(
-    body: unknown,
-    code = 200,
-    headers?: Record<string, string>
-  ): HttpFunctionResponse {
-    return {
-      code,
-      headers,
-      body,
-    };
+  get req() {
+    return this.trigger?.req;
+  }
+
+  /**
+   * Getter returns the response object from the trigger.
+   * @returns The res property of the trigger object.
+   */
+  get res() {
+    return this.trigger?.res;
+  }
+
+  /**
+   * It sets the trigger object to the request and response objects passed in
+   * @param req - The HTTP request object
+   * @param res - The HTTP response object
+   */
+  setTrigger(req: Request, res?: Response) {
+    this.trigger = extend(this.trigger, {req, res});
   }
 
   /**

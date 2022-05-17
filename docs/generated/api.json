@@ -1024,6 +1024,15 @@
             },
             {
               "kind": "Reference",
+              "text": "OpenFunction",
+              "canonicalReference": "@openfunction/functions-framework!OpenFunction:interface"
+            },
+            {
+              "kind": "Content",
+              "text": " | "
+            },
+            {
+              "kind": "Reference",
               "text": "HttpFunction",
               "canonicalReference": "@openfunction/functions-framework!HttpFunction:interface"
             },
@@ -1065,12 +1074,7 @@
             },
             {
               "kind": "Content",
-              "text": "<T> | "
-            },
-            {
-              "kind": "Reference",
-              "text": "OpenFunction",
-              "canonicalReference": "@openfunction/functions-framework!OpenFunction:interface"
+              "text": "<T>"
             },
             {
               "kind": "Content",
@@ -1094,7 +1098,7 @@
           ],
           "typeTokenRange": {
             "startIndex": 3,
-            "endIndex": 14
+            "endIndex": 15
           }
         },
         {
@@ -1968,7 +1972,7 @@
               "excerptTokens": [
                 {
                   "kind": "Content",
-                  "text": "readonly context: "
+                  "text": "protected readonly context: "
                 },
                 {
                   "kind": "Reference",
@@ -2084,29 +2088,40 @@
               "name": "ProxyContext"
             },
             {
-              "kind": "Method",
-              "canonicalReference": "@openfunction/functions-framework!OpenFunctionRuntime#response:member(1)",
-              "docComment": "/**\n * It returns an HTTP style response object with a `code`, `headers`, and `body` property\n *\n * @param body - The data you want to send back to the client.\n *\n * @param code - The HTTP status code to return.\n *\n * @param headers - An object containing the headers to be sent with the response.\n *\n * @returns A function that takes in data, code, and headers and returns an response object.\n */\n",
+              "kind": "Property",
+              "canonicalReference": "@openfunction/functions-framework!OpenFunctionRuntime#req:member",
+              "docComment": "/**\n * Getter returns the request object from the trigger.\n *\n * @returns The request object.\n */\n",
               "excerptTokens": [
                 {
                   "kind": "Content",
-                  "text": "response(body: "
+                  "text": "get req(): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "Request",
+                  "canonicalReference": "@types/express!~e.Request:interface"
                 },
                 {
                   "kind": "Content",
-                  "text": "unknown"
+                  "text": "<import(\"express-serve-static-core\")."
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ParamsDictionary",
+                  "canonicalReference": "@types/express-serve-static-core!ParamsDictionary:interface"
                 },
                 {
                   "kind": "Content",
-                  "text": ", code?: "
+                  "text": ", any, any, import(\"qs\")."
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ParsedQs",
+                  "canonicalReference": "@types/qs!~QueryString.ParsedQs:interface"
                 },
                 {
                   "kind": "Content",
-                  "text": "number"
-                },
-                {
-                  "kind": "Content",
-                  "text": ", headers?: "
+                  "text": ", "
                 },
                 {
                   "kind": "Reference",
@@ -2115,16 +2130,7 @@
                 },
                 {
                   "kind": "Content",
-                  "text": "<string, string>"
-                },
-                {
-                  "kind": "Content",
-                  "text": "): "
-                },
-                {
-                  "kind": "Reference",
-                  "text": "HttpFunctionResponse",
-                  "canonicalReference": "@openfunction/functions-framework!HttpFunctionResponse:interface"
+                  "text": "<string, any>> | undefined"
                 },
                 {
                   "kind": "Content",
@@ -2132,37 +2138,54 @@
                 }
               ],
               "isOptional": false,
-              "isStatic": false,
-              "returnTypeTokenRange": {
-                "startIndex": 8,
+              "releaseTag": "Public",
+              "name": "req",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
                 "endIndex": 9
               },
-              "releaseTag": "Public",
-              "overloadIndex": 1,
-              "parameters": [
+              "isStatic": false
+            },
+            {
+              "kind": "Property",
+              "canonicalReference": "@openfunction/functions-framework!OpenFunctionRuntime#res:member",
+              "docComment": "/**\n * Getter returns the response object from the trigger.\n *\n * @returns The res property of the trigger object.\n */\n",
+              "excerptTokens": [
                 {
-                  "parameterName": "body",
-                  "parameterTypeTokenRange": {
-                    "startIndex": 1,
-                    "endIndex": 2
-                  }
+                  "kind": "Content",
+                  "text": "get res(): "
                 },
                 {
-                  "parameterName": "code",
-                  "parameterTypeTokenRange": {
-                    "startIndex": 3,
-                    "endIndex": 4
-                  }
+                  "kind": "Reference",
+                  "text": "Response",
+                  "canonicalReference": "@types/express!~e.Response:interface"
                 },
                 {
-                  "parameterName": "headers",
-                  "parameterTypeTokenRange": {
-                    "startIndex": 5,
-                    "endIndex": 7
-                  }
+                  "kind": "Content",
+                  "text": "<any, "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "Record",
+                  "canonicalReference": "!Record:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": "<string, any>> | undefined"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
                 }
               ],
-              "name": "response"
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "res",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 5
+              },
+              "isStatic": false
             },
             {
               "kind": "Method",
@@ -2230,6 +2253,68 @@
               "name": "send"
             },
             {
+              "kind": "Method",
+              "canonicalReference": "@openfunction/functions-framework!OpenFunctionRuntime#setTrigger:member(1)",
+              "docComment": "/**\n * It sets the trigger object to the request and response objects passed in\n *\n * @param req - The HTTP request object\n *\n * @param res - The HTTP response object\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "setTrigger(req: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "Request",
+                  "canonicalReference": "@types/express!~e.Request:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", res?: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "Response",
+                  "canonicalReference": "@types/express!~e.Response:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isOptional": false,
+              "isStatic": false,
+              "returnTypeTokenRange": {
+                "startIndex": 5,
+                "endIndex": 6
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "req",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  }
+                },
+                {
+                  "parameterName": "res",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 3,
+                    "endIndex": 4
+                  }
+                }
+              ],
+              "name": "setTrigger"
+            },
+            {
               "kind": "Property",
               "canonicalReference": "@openfunction/functions-framework!OpenFunctionRuntime#sidecarPort:member",
               "docComment": "/**\n * Getter for the port of Dapr sidecar\n */\n",
@@ -2250,6 +2335,34 @@
               "isOptional": false,
               "releaseTag": "Public",
               "name": "sidecarPort",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "isStatic": false
+            },
+            {
+              "kind": "Property",
+              "canonicalReference": "@openfunction/functions-framework!OpenFunctionRuntime#trigger:member",
+              "docComment": "/**\n * The optional trigger of OpenFunction.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "protected trigger?: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "OpenFunctionTrigger",
+                  "canonicalReference": "@openfunction/functions-framework!OpenFunctionTrigger:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isOptional": true,
+              "releaseTag": "Public",
+              "name": "trigger",
               "propertyTypeTokenRange": {
                 "startIndex": 1,
                 "endIndex": 2

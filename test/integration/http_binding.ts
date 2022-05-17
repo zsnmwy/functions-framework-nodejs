@@ -84,7 +84,7 @@ describe('OpenFunction - HTTP Binding', () => {
       const server = getServer(
         async (ctx: OpenFunctionRuntime, data: {}) => {
           await ctx.send(data);
-          return ctx.response(data);
+          ctx.res?.send(data);
         },
         'openfunction',
         context

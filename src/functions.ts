@@ -115,12 +115,12 @@ export interface HttpFunctionResponse {
  * @public
  */
 export type HandlerFunction<T = unknown> =
+  | OpenFunction
   | HttpFunction
   | EventFunction
   | EventFunctionWithCallback
   | CloudEventFunction<T>
-  | CloudEventFunctionWithCallback<T>
-  | OpenFunction;
+  | CloudEventFunctionWithCallback<T>;
 
 /**
  * A legacy event.

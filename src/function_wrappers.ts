@@ -15,9 +15,6 @@
 // eslint-disable-next-line node/no-deprecated-api
 import * as domain from 'domain';
 
-import * as Debug from 'debug';
-import {get, isEmpty} from 'lodash';
-
 import {Request, Response, RequestHandler} from 'express';
 import {sendCrashResponse} from './logger';
 import {sendResponse} from './invoker';
@@ -36,8 +33,6 @@ import {SignatureType} from './types';
 
 import {OpenFunctionContext} from './openfunction/function_context';
 import {OpenFunctionRuntime} from './openfunction/function_runtime';
-
-const debug = Debug('common:wrapper');
 
 /**
  * The handler function used to signal completion of event functions.
@@ -136,26 +131,14 @@ const wrapOpenFunction = (
   context: OpenFunctionContext
 ): RequestHandler => {
   const ctx = OpenFunctionRuntime.ProxyContext(context);
+
   const httpHandler = (req: Request, res: Response) => {
     const callback = getOnDoneCallback(res);
+    ctx.setTrigger(req, res);
 
     Promise.resolve()
       .then(() => userFunction(ctx, req.body))
-      .then(result => {
-        debug('ℹ️ User function returned: %j', result);
-
-        const data = get(result, 'body');
-        const code = get(result, 'code', 200);
-        const headers = get(result, 'headers');
-
-        !isEmpty(headers) && res.set(headers);
-
-        if (data !== undefined) {
-          res.status(code).send(data);
-        } else {
-          res.status(code).end();
-        }
-      })
+      .then(() => res.end())
       .catch(err => callback(err, undefined));
   };
 
