@@ -44,9 +44,10 @@ function writeJson(content) {
   fs.writeFileSync(fileName, json);
 }
 
-function tryKnative(req, res) {
-  debug('✅ Function should receive request: %o', req.body);
-  res.send(req.body);
+async function tryKnativeAsync(ctx, data) {
+  debug('✅ Function should receive request: %o', data);
+  await ctx.send(data);
+  return ctx.response(data);
 }
 
 function tryAsync(ctx, data) {
@@ -57,6 +58,6 @@ module.exports = {
   writeHttp,
   writeCloudEvent,
   writeLegacyEvent,
-  tryKnative,
+  tryKnativeAsync,
   tryAsync,
 };

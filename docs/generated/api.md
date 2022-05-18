@@ -5,8 +5,11 @@
 ```ts
 
 /// <reference types="node" />
+/// <reference types="qs" />
 
 import { CloudEventV1 as CloudEvent } from 'cloudevents';
+import { ParamsDictionary } from 'express-serve-static-core';
+import { ParsedQs } from 'qs';
 import { Request as Request_3 } from 'express';
 import { Response as Response_2 } from 'express';
 
@@ -73,7 +76,7 @@ export interface EventFunctionWithCallback {
 }
 
 // @public
-export type HandlerFunction<T = unknown> = HttpFunction | EventFunction | EventFunctionWithCallback | CloudEventFunction<T> | CloudEventFunctionWithCallback<T> | OpenFunction;
+export type HandlerFunction<T = unknown> = OpenFunction | HttpFunction | EventFunction | EventFunctionWithCallback | CloudEventFunction<T> | CloudEventFunctionWithCallback<T>;
 
 // @public
 export const http: (functionName: string, handler: HttpFunction) => void;
@@ -82,6 +85,13 @@ export const http: (functionName: string, handler: HttpFunction) => void;
 export interface HttpFunction {
     // (undocumented)
     (req: Request_2, res: Response_2): any;
+}
+
+// @public
+export interface HttpFunctionResponse {
+    body?: any;
+    code?: number;
+    headers?: Record<string, string>;
 }
 
 // @public
@@ -99,8 +109,6 @@ export interface LegacyEvent {
 
 // @public
 export interface OpenFunction {
-    // Warning: (ae-forgotten-export) The symbol "OpenFunctionRuntime" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
     (ctx: OpenFunctionRuntime, data: {}): any;
 }
@@ -127,6 +135,24 @@ export interface OpenFunctionContext {
     port?: string;
     runtime: `${RuntimeType}` | `${Capitalize<RuntimeType>}` | `${Uppercase<RuntimeType>}`;
     version: string;
+}
+
+// @public
+export abstract class OpenFunctionRuntime {
+    constructor(context: OpenFunctionContext);
+    protected readonly context: OpenFunctionContext;
+    static Parse(context: OpenFunctionContext): OpenFunctionRuntime;
+    static ProxyContext(context: OpenFunctionContext): OpenFunctionRuntime;
+    get req(): Request_3<ParamsDictionary, any, any, ParsedQs, Record<string, any>> | undefined;
+    get res(): Response_2<any, Record<string, any>> | undefined;
+    abstract send(data: object, output?: string): Promise<object>;
+    setTrigger(req: Request_3, res?: Response_2): void;
+    get sidecarPort(): {
+        HTTP: string;
+        GRRC: string;
+    };
+    // Warning: (ae-forgotten-export) The symbol "OpenFunctionTrigger" needs to be exported by the entry point index.d.ts
+    protected trigger?: OpenFunctionTrigger;
 }
 
 // @public (undocumented)

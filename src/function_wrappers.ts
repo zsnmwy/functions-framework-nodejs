@@ -14,6 +14,7 @@
 
 // eslint-disable-next-line node/no-deprecated-api
 import * as domain from 'domain';
+
 import {Request, Response, RequestHandler} from 'express';
 import {sendCrashResponse} from './logger';
 import {sendResponse} from './invoker';
@@ -27,8 +28,11 @@ import {
   CloudEventFunctionWithCallback,
   HandlerFunction,
 } from './functions';
-import {CloudEvent} from './functions';
+import {CloudEvent, OpenFunction} from './functions';
 import {SignatureType} from './types';
+
+import {OpenFunctionContext} from './openfunction/function_context';
+import {OpenFunctionRuntime} from './openfunction/function_runtime';
 
 /**
  * The handler function used to signal completion of event functions.
@@ -122,6 +126,25 @@ const wrapHttpFunction = (execute: HttpFunction): RequestHandler => {
   };
 };
 
+const wrapOpenFunction = (
+  userFunction: OpenFunction,
+  context: OpenFunctionContext
+): RequestHandler => {
+  const ctx = OpenFunctionRuntime.ProxyContext(context);
+
+  const httpHandler = (req: Request, res: Response) => {
+    const callback = getOnDoneCallback(res);
+    ctx.setTrigger(req, res);
+
+    Promise.resolve()
+      .then(() => userFunction(ctx, req.body))
+      .then(() => res.end())
+      .catch(err => callback(err, undefined));
+  };
+
+  return wrapHttpFunction(httpHandler);
+};
+
 /**
  * Wraps an async CloudEvent function in an express RequestHandler.
  * @param userFunction User's function.
@@ -202,11 +225,17 @@ const wrapEventFunctionWithCallback = (
  */
 export const wrapUserFunction = <T = unknown>(
   userFunction: HandlerFunction<T>,
-  signatureType: SignatureType
+  signatureType: SignatureType,
+  context?: object
 ): RequestHandler => {
   switch (signatureType) {
     case 'http':
       return wrapHttpFunction(userFunction as HttpFunction);
+    case 'openfunction':
+      return wrapOpenFunction(
+        userFunction as OpenFunction,
+        context as OpenFunctionContext
+      );
     case 'event':
       // Callback style if user function has more than 2 arguments.
       if (userFunction!.length > 2) {

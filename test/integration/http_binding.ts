@@ -3,11 +3,12 @@ import {deepStrictEqual} from 'assert';
 import * as sinon from 'sinon';
 import * as supertest from 'supertest';
 import * as shell from 'shelljs';
-import {Request, Response} from 'express';
 import {cloneDeep, forEach, set} from 'lodash';
 
-import {getServer} from '../../src/server';
 import {OpenFunctionContext} from '../../src/openfunction/function_context';
+
+import {OpenFunctionRuntime} from '../../src/functions';
+import {getServer} from '../../src/server';
 
 const TEST_CONTEXT: OpenFunctionContext = {
   name: 'test-context',
@@ -81,15 +82,17 @@ describe('OpenFunction - HTTP Binding', () => {
       );
 
       const server = getServer(
-        (req: Request, res: Response) => {
-          res.status(200).json(TEST_PAYLOAD);
+        async (ctx: OpenFunctionRuntime, data: {}) => {
+          await ctx.send(data);
+          ctx.res?.send(data);
         },
-        'http',
+        'openfunction',
         context
       );
 
       await supertest(server)
-        .get('/')
+        .post('/')
+        .send(TEST_PAYLOAD)
         .expect(200)
         .expect(res => {
           deepStrictEqual(res.body, TEST_PAYLOAD);

@@ -1,6 +1,7 @@
 import {env} from 'process';
 
-import {chain} from 'lodash';
+import {chain, get, has, extend} from 'lodash';
+import {Request, Response} from 'express';
 import {DaprClient, CommunicationProtocolEnum} from 'dapr-client';
 
 import {
@@ -10,13 +11,34 @@ import {
 } from './function_context';
 
 /**
+ * Defining the interface of the HttpTarget.
+ * @public
+ */
+export interface HttpTrigger {
+  req?: Request;
+  res?: Response;
+}
+
+/**
+ * Defining the type union of OpenFunction trigger.
+ * @public
+ */
+export type OpenFunctionTrigger = HttpTrigger;
+
+/**
  * The OpenFunction's serving runtime abstract class.
+ * @public
  */
 export abstract class OpenFunctionRuntime {
   /**
    * The context of the OpenFunction.
    */
-  readonly context: OpenFunctionContext;
+  protected readonly context: OpenFunctionContext;
+
+  /**
+   * The optional trigger of OpenFunction.
+   */
+  protected trigger?: OpenFunctionTrigger;
 
   /**
    * Constructor of the OpenFunctionRuntime.
@@ -33,6 +55,26 @@ export abstract class OpenFunctionRuntime {
   }
 
   /**
+   * It creates a proxy for the runtime object, which delegates all property access to the runtime object
+   * @param context - The context object to be proxied.
+   * @returns The proxy object.
+   */
+  static ProxyContext(context: OpenFunctionContext): OpenFunctionRuntime {
+    // Get a proper runtime for the context
+    const runtime = OpenFunctionRuntime.Parse(context);
+
+    // Create a proxy for the context
+    return new Proxy(runtime, {
+      get: (target, prop) => {
+        // Provide delegated property access of the context object
+        if (has(target.context, prop)) return get(target.context, prop);
+        // Otherwise, return the property of the runtime object
+        else return Reflect.get(target, prop);
+      },
+    });
+  }
+
+  /**
    * Getter for the port of Dapr sidecar
    */
   get sidecarPort() {
@@ -43,7 +85,32 @@ export abstract class OpenFunctionRuntime {
   }
 
   /**
-   * The promise that send data to certain ouput binding or pubsub topic.
+   * Getter returns the request object from the trigger.
+   * @returns The request object.
+   */
+  get req() {
+    return this.trigger?.req;
+  }
+
+  /**
+   * Getter returns the response object from the trigger.
+   * @returns The res property of the trigger object.
+   */
+  get res() {
+    return this.trigger?.res;
+  }
+
+  /**
+   * It sets the trigger object to the request and response objects passed in
+   * @param req - The HTTP request object
+   * @param res - The HTTP response object
+   */
+  setTrigger(req: Request, res?: Response) {
+    this.trigger = extend(this.trigger, {req, res});
+  }
+
+  /**
+   * The promise that send data to certain ouput.
    */
   abstract send(data: object, output?: string): Promise<object>;
 }
