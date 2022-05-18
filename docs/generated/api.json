@@ -1,8 +1,8 @@
 {
   "metadata": {
     "toolPackage": "@microsoft/api-extractor",
-    "toolVersion": "7.19.4",
-    "schemaVersion": 1004,
+    "toolVersion": "7.24.0",
+    "schemaVersion": 1005,
     "oldestForwardsCompatibleVersion": 1001,
     "tsdocConfig": {
       "$schema": "https://developer.microsoft.com/json-schemas/tsdoc/v0/tsdoc.schema.json",
@@ -156,7 +156,8 @@
         "@betaDocumentation": true,
         "@internalRemarks": true,
         "@preapproved": true
-      }
+      },
+      "reportUnsupportedHtmlElements": false
     }
   },
   "kind": "Package",
@@ -276,7 +277,8 @@
                   "parameterTypeTokenRange": {
                     "startIndex": 1,
                     "endIndex": 3
-                  }
+                  },
+                  "isOptional": false
                 }
               ]
             }
@@ -369,14 +371,16 @@
                   "parameterTypeTokenRange": {
                     "startIndex": 1,
                     "endIndex": 3
-                  }
+                  },
+                  "isOptional": false
                 },
                 {
                   "parameterName": "callback",
                   "parameterTypeTokenRange": {
                     "startIndex": 4,
                     "endIndex": 5
-                  }
+                  },
+                  "isOptional": false
                 }
               ]
             }
@@ -653,7 +657,8 @@
                   "parameterTypeTokenRange": {
                     "startIndex": 1,
                     "endIndex": 2
-                  }
+                  },
+                  "isOptional": false
                 }
               ],
               "name": "IsAsyncRuntime"
@@ -699,7 +704,8 @@
                   "parameterTypeTokenRange": {
                     "startIndex": 1,
                     "endIndex": 2
-                  }
+                  },
+                  "isOptional": false
                 }
               ],
               "name": "IsBindingComponent"
@@ -745,7 +751,8 @@
                   "parameterTypeTokenRange": {
                     "startIndex": 1,
                     "endIndex": 2
-                  }
+                  },
+                  "isOptional": false
                 }
               ],
               "name": "IsKnativeRuntime"
@@ -791,7 +798,8 @@
                   "parameterTypeTokenRange": {
                     "startIndex": 1,
                     "endIndex": 2
-                  }
+                  },
+                  "isOptional": false
                 }
               ],
               "name": "IsPubSubComponent"
@@ -901,14 +909,16 @@
                   "parameterTypeTokenRange": {
                     "startIndex": 1,
                     "endIndex": 2
-                  }
+                  },
+                  "isOptional": false
                 },
                 {
                   "parameterName": "context",
                   "parameterTypeTokenRange": {
                     "startIndex": 3,
                     "endIndex": 4
-                  }
+                  },
+                  "isOptional": false
                 }
               ]
             }
@@ -984,21 +994,24 @@
                   "parameterTypeTokenRange": {
                     "startIndex": 1,
                     "endIndex": 2
-                  }
+                  },
+                  "isOptional": false
                 },
                 {
                   "parameterName": "context",
                   "parameterTypeTokenRange": {
                     "startIndex": 3,
                     "endIndex": 4
-                  }
+                  },
+                  "isOptional": false
                 },
                 {
                   "parameterName": "callback",
                   "parameterTypeTokenRange": {
                     "startIndex": 5,
                     "endIndex": 6
-                  }
+                  },
+                  "isOptional": false
                 }
               ]
             }
@@ -1192,14 +1205,16 @@
                   "parameterTypeTokenRange": {
                     "startIndex": 1,
                     "endIndex": 2
-                  }
+                  },
+                  "isOptional": false
                 },
                 {
                   "parameterName": "res",
                   "parameterTypeTokenRange": {
                     "startIndex": 3,
                     "endIndex": 4
-                  }
+                  },
+                  "isOptional": false
                 }
               ]
             }
@@ -1469,14 +1484,16 @@
                   "parameterTypeTokenRange": {
                     "startIndex": 1,
                     "endIndex": 2
-                  }
+                  },
+                  "isOptional": false
                 },
                 {
                   "parameterName": "data",
                   "parameterTypeTokenRange": {
                     "startIndex": 3,
                     "endIndex": 4
-                  }
+                  },
+                  "isOptional": false
                 }
               ]
             }
@@ -1535,7 +1552,8 @@
                   "parameterTypeTokenRange": {
                     "startIndex": 1,
                     "endIndex": 2
-                  }
+                  },
+                  "isOptional": false
                 }
               ]
             }
@@ -1961,7 +1979,8 @@
                   "parameterTypeTokenRange": {
                     "startIndex": 1,
                     "endIndex": 2
-                  }
+                  },
+                  "isOptional": false
                 }
               ]
             },
@@ -2035,7 +2054,8 @@
                   "parameterTypeTokenRange": {
                     "startIndex": 1,
                     "endIndex": 2
-                  }
+                  },
+                  "isOptional": false
                 }
               ],
               "name": "Parse"
@@ -2082,7 +2102,8 @@
                   "parameterTypeTokenRange": {
                     "startIndex": 1,
                     "endIndex": 2
-                  }
+                  },
+                  "isOptional": false
                 }
               ],
               "name": "ProxyContext"
@@ -2240,14 +2261,16 @@
                   "parameterTypeTokenRange": {
                     "startIndex": 1,
                     "endIndex": 2
-                  }
+                  },
+                  "isOptional": false
                 },
                 {
                   "parameterName": "output",
                   "parameterTypeTokenRange": {
                     "startIndex": 3,
                     "endIndex": 4
-                  }
+                  },
+                  "isOptional": true
                 }
               ],
               "name": "send"
@@ -2302,14 +2325,16 @@
                   "parameterTypeTokenRange": {
                     "startIndex": 1,
                     "endIndex": 2
-                  }
+                  },
+                  "isOptional": false
                 },
                 {
                   "parameterName": "res",
                   "parameterTypeTokenRange": {
                     "startIndex": 3,
                     "endIndex": 4
-                  }
+                  },
+                  "isOptional": true
                 }
               ],
               "name": "setTrigger"
@@ -2425,7 +2450,7 @@
           "extendsTokenRanges": [
             {
               "startIndex": 1,
-              "endIndex": 3
+              "endIndex": 2
             }
           ]
         },
