@@ -47,7 +47,7 @@ function writeJson(content) {
 async function tryKnativeAsync(ctx, data) {
   debug('✅ Function should receive request: %o', data);
   await ctx.send(data);
-  return ctx.response(data);
+  ctx.res.send(data);
 }
 
 function tryAsync(ctx, data) {
