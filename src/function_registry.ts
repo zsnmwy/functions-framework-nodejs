@@ -12,7 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {HttpFunction, CloudEventFunction, HandlerFunction} from './functions';
+import {
+  HttpFunction,
+  CloudEventFunction,
+  HandlerFunction,
+  OpenFunction,
+} from './functions';
 import {SignatureType} from './types';
 
 interface RegisteredFunction<T> {
@@ -93,4 +98,17 @@ export const cloudEvent = <T = unknown>(
   handler: CloudEventFunction<T>
 ): void => {
   register(functionName, 'cloudevent', handler);
+};
+
+/**
+ * Register a function that responds to OpenFunction.
+ * @param functionName - the name of the function
+ * @param handler - the function to invoke when handling OpenFunction
+ * @public
+ */
+export const openfunction = (
+  functionName: string,
+  handler: OpenFunction
+): void => {
+  register(functionName, 'openfunction', handler);
 };

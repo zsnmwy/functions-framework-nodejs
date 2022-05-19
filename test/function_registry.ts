@@ -31,6 +31,14 @@ describe('function_registry', () => {
     assert.deepStrictEqual((userFunction as () => string)(), 'CE_PASS');
   });
 
+  it('can register OpenFunction functions', () => {
+    FunctionRegistry.openfunction('OpenFunction', () => 'OFN_PASS');
+    const {userFunction, signatureType} =
+      FunctionRegistry.getRegisteredFunction('OpenFunction')!;
+    assert.deepStrictEqual('openfunction', signatureType);
+    assert.deepStrictEqual((userFunction as () => string)(), 'OFN_PASS');
+  });
+
   it('throws an error if you try to register a function with an invalid URL', () => {
     // Valid function names
     const validFunctions = ['httpFunction', 'ceFunction', 'test-func'];

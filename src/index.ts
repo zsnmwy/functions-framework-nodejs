@@ -20,7 +20,7 @@ export * from './functions';
 /**
  * @public
  */
-export {http, cloudEvent} from './function_registry';
+export {http, cloudEvent, openfunction} from './function_registry';
 
 /**
  * @public

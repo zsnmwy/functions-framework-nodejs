@@ -1,7 +1,10 @@
 import * as assert from 'assert';
 import * as sinon from 'sinon';
 import {Request, Response} from 'express';
-import {Context, CloudEvent} from '../src/functions';
+
+import {OpenFunctionContext} from '../src/openfunction/function_context';
+
+import {Context, CloudEvent, OpenFunctionRuntime} from '../src/functions';
 import {wrapUserFunction} from '../src/function_wrappers';
 
 describe('wrapUserFunction', () => {
@@ -15,6 +18,12 @@ describe('wrapUserFunction', () => {
     data: {
       hello: 'world',
     },
+  };
+
+  const OPENFUNCTION_CONTEXT: OpenFunctionContext = {
+    name: 'test-context',
+    version: '1.0.0',
+    runtime: 'Knative',
   };
 
   const createRequest = (body: object) =>
@@ -104,5 +113,22 @@ describe('wrapUserFunction', () => {
       'cloudevent'
     );
     func(request, response, () => {});
+  });
+
+  it('correctly wraps an OpenFunctionn function', done => {
+    const request = createRequest(CLOUD_EVENT);
+    const response = createResponse();
+    const func = wrapUserFunction(
+      async (context: OpenFunctionRuntime, data: {}) => {
+        assert.deepStrictEqual(data, CLOUD_EVENT);
+        assert.deepStrictEqual(context.req?.body, CLOUD_EVENT);
+        // await to make sure wrapper handles async code
+        await new Promise(resolve => setTimeout(resolve, 20));
+        done();
+      },
+      'openfunction',
+      OPENFUNCTION_CONTEXT
+    );
+    func(request, Object.assign(response, {end: () => {}}), () => {});
   });
 });

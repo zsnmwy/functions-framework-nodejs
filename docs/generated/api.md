@@ -114,6 +114,9 @@ export interface OpenFunction {
 }
 
 // @public
+export const openfunction: (functionName: string, handler: OpenFunction) => void;
+
+// @public
 export interface OpenFunctionBinding {
     [key: string]: OpenFunctionComponent;
 }

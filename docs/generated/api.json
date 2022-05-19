@@ -1501,6 +1501,36 @@
           "extendsTokenRanges": []
         },
         {
+          "kind": "Variable",
+          "canonicalReference": "@openfunction/functions-framework!openfunction:var",
+          "docComment": "/**\n * Register a function that responds to OpenFunction.\n *\n * @param functionName - the name of the function\n *\n * @param handler - the function to invoke when handling OpenFunction\n *\n * @public\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "openfunction: "
+            },
+            {
+              "kind": "Content",
+              "text": "(functionName: string, handler: "
+            },
+            {
+              "kind": "Reference",
+              "text": "OpenFunction",
+              "canonicalReference": "@openfunction/functions-framework!OpenFunction:interface"
+            },
+            {
+              "kind": "Content",
+              "text": ") => void"
+            }
+          ],
+          "releaseTag": "Public",
+          "name": "openfunction",
+          "variableTypeTokenRange": {
+            "startIndex": 1,
+            "endIndex": 4
+          }
+        },
+        {
           "kind": "Interface",
           "canonicalReference": "@openfunction/functions-framework!OpenFunctionBinding:interface",
           "docComment": "/**\n * The binding interface of the context.\n *\n * @public\n */\n",
