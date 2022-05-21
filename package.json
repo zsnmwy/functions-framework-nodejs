@@ -13,9 +13,9 @@
     "./testing": "./build/src/testing.js"
   },
   "dependencies": {
+    "@dapr/dapr": "^2.2.1",
     "body-parser": "^1.18.3",
     "cloudevents": "^6.0.1",
-    "dapr-client": "^2.1.0",
     "debug": "^4.3.4",
     "express": "^4.16.4",
     "express-interceptor": "^1.2.0",

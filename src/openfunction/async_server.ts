@@ -1,5 +1,5 @@
 import {forEach} from 'lodash';
-import {DaprServer} from 'dapr-client';
+import {DaprServer} from '@dapr/dapr';
 
 import {OpenFunction} from '../functions';
 
