@@ -2,7 +2,7 @@ import {env} from 'process';
 
 import {chain, get, has, extend} from 'lodash';
 import {Request, Response} from 'express';
-import {DaprClient, CommunicationProtocolEnum} from 'dapr-client';
+import {DaprClient, CommunicationProtocolEnum} from '@dapr/dapr';
 
 import {
   OpenFunctionComponent,
