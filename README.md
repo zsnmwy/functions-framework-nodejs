@@ -4,13 +4,16 @@
 
 [![Node unit CI][ff_node_unit_img]][ff_node_unit_link] [![Node lint CI][ff_node_lint_img]][ff_node_lint_link]
 
-> This is OpenFunction's nodejs functions-framework forked from [GCP functions-framework-nodejs](https://github.com/GoogleCloudPlatform/functions-framework-nodejs)
+![Alt](https://repobeats.axiom.co/api/embed/988db7b27f5120583d096d8131fd26626c349fac.svg "Repobeats analytics image")
+
+---
+
+> This is OpenFunction's Node.js Functions Framework forked from [GCP functions-framework-nodejs](https://github.com/GoogleCloudPlatform/functions-framework-nodejs).
 
 An open source FaaS (Function as a Service) framework based on [Express](https://expressjs.com/)
  and [Restana](https://github.com/BackendStack21/restana) for writing portable sync and async Node.js functions.
 
-The Functions Framework lets you write lightweight functions that run in many
-different environments, including:
+The Functions Framework lets you write lightweight functions that run in many different environments, including:
 
 * [OpenFunction](https://github.com/OpenFunction/OpenFunction)
 * [Knative](https://github.com/knative/)-based environments
@@ -101,8 +104,7 @@ npm install @openfunction/functions-framework
     npm install @openfunction/functions-framework
     ```
 
-1. Add a `start` script to `package.json`, with configuration passed via
-command-line arguments:
+1. Add a `start` script to `package.json`, with configuration passed via command-line arguments:
 
     ```js
       "scripts": {
@@ -160,9 +162,7 @@ command-line arguments:
 
 ## Configure the Functions Framework
 
-You can configure the Functions Framework using command-line flags or
-environment variables. If you specify both, the environment variable will be
-ignored.
+You can configure the Functions Framework using command-line flags or environment variables. If you specify both, the environment variable will be ignored.
 
 | Command-line flag  | Environment variable      | Description                                                                                                                                                                                                      |
 | ------------------ | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -281,8 +281,7 @@ More advanced guides and docs can be found in the [`docs/` folder](docs/).
 
 ## Contributing
 
-Contributions to this library are welcome and encouraged. See
-[CONTRIBUTING](CONTRIBUTING.md) for more information on how to get started.
+Contributions to this library are welcome and encouraged. See [CONTRIBUTING](CONTRIBUTING.md) for more information on how to get started.
 
 [ff_node_unit_img]: https://github.com/openfunction/functions-framework-nodejs/workflows/Node.js%20Unit%20CI/badge.svg
 [ff_node_unit_link]:  https://github.com/openfunction/functions-framework-nodejs/actions?query=workflow%3A"Node.js+Unit+CI"
