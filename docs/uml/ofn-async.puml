@@ -1,4 +1,4 @@
-@startuml Async Server
+@startuml OpenFunction in Async Runtime
 
 box Function Process in Local Environment or Container
 control ENTRYPOINT
