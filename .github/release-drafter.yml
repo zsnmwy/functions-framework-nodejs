@@ -16,6 +16,8 @@ categories:
     label: 'type: bug'
   - title: '🏗️ Maintenance'
     label: 'type: maintenance'
+  - title: '🔒 Security'
+    label: 'type: security'
   - title: '👷 CI/CD'
     label: 'type: cicd'
   - title: '📝 Documentation'
