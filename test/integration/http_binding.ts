@@ -9,6 +9,7 @@ import {OpenFunctionContext} from '../../src/openfunction/function_context';
 
 import {OpenFunctionRuntime} from '../../src/functions';
 import {getServer} from '../../src/server';
+import {FUNCTION_STATUS_HEADER_FIELD} from '../../src/types';
 
 const TEST_CONTEXT: OpenFunctionContext = {
   name: 'test-context',
@@ -72,6 +73,7 @@ describe('OpenFunction - HTTP Binding', () => {
     {name: 'Save data', operation: 'create', listable: true},
     {name: 'Get data', operation: 'get', listable: true},
     {name: 'Delete data', operation: 'delete', listable: false},
+    {name: 'Error data', operation: '', listable: false},
   ];
 
   testData.forEach(test => {
@@ -83,6 +85,8 @@ describe('OpenFunction - HTTP Binding', () => {
 
       const server = getServer(
         async (ctx: OpenFunctionRuntime, data: {}) => {
+          if (!test.operation) throw new Error('I crashed');
+
           await ctx.send(data);
           ctx.res?.send(data);
         },
@@ -93,9 +97,14 @@ describe('OpenFunction - HTTP Binding', () => {
       await supertest(server)
         .post('/')
         .send(TEST_PAYLOAD)
-        .expect(200)
+        .expect(test.operation ? 200 : 500)
         .expect(res => {
-          deepStrictEqual(res.body, TEST_PAYLOAD);
+          !test.operation
+            ? deepStrictEqual(
+                res.headers[FUNCTION_STATUS_HEADER_FIELD.toLowerCase()],
+                'error'
+              )
+            : deepStrictEqual(res.body, TEST_PAYLOAD);
         });
 
       forEach(context.outputs, output => {

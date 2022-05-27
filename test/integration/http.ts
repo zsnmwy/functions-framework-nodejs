@@ -18,6 +18,7 @@ import * as supertest from 'supertest';
 
 import * as functions from '../../src/index';
 import {getTestServer} from '../../src/testing';
+import {FUNCTION_STATUS_HEADER_FIELD} from '../../src/types';
 
 describe('HTTP Function', () => {
   let callCount = 0;
@@ -99,13 +100,19 @@ describe('HTTP Function', () => {
   testData.forEach(test => {
     it(test.name, async () => {
       const st = supertest(getTestServer('testHttpFunction'));
-      await (test.httpVerb === 'GET'
-        ? st.get(test.path)
-        : st.post(test.path).send({text: 'hello'})
-      )
-        .set('Content-Type', 'application/json')
-        .expect(test.expectedBody)
-        .expect(test.expectedStatus);
+      try {
+        await (test.httpVerb === 'GET'
+          ? st.get(test.path)
+          : st.post(test.path).send({text: 'hello'})
+        )
+          .set('Content-Type', 'application/json')
+          .expect(test.expectedBody)
+          .expect(test.expectedStatus)
+          .expect(FUNCTION_STATUS_HEADER_FIELD, 'crash');
+      } catch (err) {
+        test.expectedStatus === 500 && assert(err);
+      }
+
       assert.strictEqual(callCount, test.expectedCallCount);
     });
   });

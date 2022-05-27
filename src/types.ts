@@ -14,7 +14,7 @@
 
 // HTTP header field that is added to Worker response to signalize problems with
 // executing the client function.
-export const FUNCTION_STATUS_HEADER_FIELD = 'X-Google-Status';
+export const FUNCTION_STATUS_HEADER_FIELD = 'X-OpenFunction-Status';
 
 /**
  * List of function signature types that are supported by the framework.

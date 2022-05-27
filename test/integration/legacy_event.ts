@@ -13,10 +13,13 @@
 // limitations under the License.
 
 import * as assert from 'assert';
-import * as functions from '../../src/functions';
-import * as sinon from 'sinon';
-import {getServer} from '../../src/server';
+
 import * as supertest from 'supertest';
+import * as sinon from 'sinon';
+
+import * as functions from '../../src/index';
+import {getServer} from '../../src/server';
+import {FUNCTION_STATUS_HEADER_FIELD} from '../../src/types';
 
 const TEST_CLOUD_EVENT = {
   specversion: '1.0',
@@ -214,7 +217,10 @@ describe('Event Function', () => {
       })
       .set({'Content-Type': 'application/json'})
       .expect(res => {
-        assert.deepStrictEqual(res.headers['x-google-status'], 'error');
+        assert.deepStrictEqual(
+          res.headers[FUNCTION_STATUS_HEADER_FIELD.toLowerCase()],
+          'error'
+        );
         assert.deepStrictEqual(res.body, {});
       })
       .expect(500);

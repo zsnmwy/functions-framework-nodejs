@@ -138,7 +138,7 @@ const wrapOpenFunction = (
 
     Promise.resolve()
       .then(() => userFunction(ctx, req.body))
-      .then(() => res.end())
+      .then(result => callback(null, result))
       .catch(err => callback(err, undefined));
   };
 
