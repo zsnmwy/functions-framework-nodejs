@@ -21,7 +21,7 @@ jobs:
       - name: Install Dapr
         uses: dapr/setup-dapr@v1
         with:
-          version: '1.5.1'
+          version: '1.7.3'
       - name: Install Docker for macOS
         uses: docker-practice/actions-setup-docker@master
         if: ${{ matrix.platform == 'macos-latest' }}
