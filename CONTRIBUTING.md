@@ -8,6 +8,12 @@ Contributions to this project must be accompanied by a  Developer Certificate of
 
 You only need to submit a DTO once, so if you've already submitted one (even if it was for a different project), you probably don't need to do it again.
 
+## Commit Guidelines
+
+Commits to this project must follow [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/) specification, especially the commit message structure.
+
+Besides, we recommend that you could use [gitmoji](https://gitmoji.dev/related-tools) tool in your IDE to add proper emoji prefix to each commit.
+
 ## Code reviews
 
 All submissions, including submissions by project members, require review. We use GitHub pull requests for this purpose. Consult [GitHub Help](https://help.github.com/articles/about-pull-requests/) for more information on using pull requests.
