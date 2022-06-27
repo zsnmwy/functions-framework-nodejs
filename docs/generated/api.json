@@ -1,8 +1,8 @@
 {
   "metadata": {
     "toolPackage": "@microsoft/api-extractor",
-    "toolVersion": "7.26.1",
-    "schemaVersion": 1007,
+    "toolVersion": "7.27.0",
+    "schemaVersion": 1008,
     "oldestForwardsCompatibleVersion": 1001,
     "tsdocConfig": {
       "$schema": "https://developer.microsoft.com/json-schemas/tsdoc/v0/tsdoc.schema.json",
@@ -545,12 +545,12 @@
                   "text": "\"bindings\""
                 }
               ],
-              "releaseTag": "Public",
-              "name": "Binding",
               "initializerTokenRange": {
                 "startIndex": 1,
                 "endIndex": 2
-              }
+              },
+              "releaseTag": "Public",
+              "name": "Binding"
             },
             {
               "kind": "EnumMember",
@@ -566,12 +566,12 @@
                   "text": "\"pubsub\""
                 }
               ],
-              "releaseTag": "Public",
-              "name": "PubSub",
               "initializerTokenRange": {
                 "startIndex": 1,
                 "endIndex": 2
-              }
+              },
+              "releaseTag": "Public",
+              "name": "PubSub"
             }
           ]
         },
@@ -2575,12 +2575,12 @@
                   "text": "\"async\""
                 }
               ],
-              "releaseTag": "Public",
-              "name": "Async",
               "initializerTokenRange": {
                 "startIndex": 1,
                 "endIndex": 2
-              }
+              },
+              "releaseTag": "Public",
+              "name": "Async"
             },
             {
               "kind": "EnumMember",
@@ -2596,12 +2596,12 @@
                   "text": "\"knative\""
                 }
               ],
-              "releaseTag": "Public",
-              "name": "Knative",
               "initializerTokenRange": {
                 "startIndex": 1,
                 "endIndex": 2
-              }
+              },
+              "releaseTag": "Public",
+              "name": "Knative"
             }
           ]
         }
