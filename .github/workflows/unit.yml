@@ -26,7 +26,7 @@ jobs:
         uses: docker-practice/actions-setup-docker@master
         if: ${{ matrix.platform == 'macos-latest' }}
       - name: Initialize Dapr
-        run: dapr init
+        run: dapr init -s --runtime-version 1.7.1
       - name: Install dependencies
         run: npm install
       - name: Build TypeScript project
