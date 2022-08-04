@@ -1,4 +1,4 @@
-import {forEach} from 'lodash';
+import {forEach, invoke} from 'lodash';
 import {DaprServer} from '@dapr/dapr';
 
 import {OpenFunction} from '../functions';
@@ -23,7 +23,24 @@ export default function (
   const ctx = OpenFunctionRuntime.ProxyContext(context);
 
   const wrapper = async (data: object) => {
+    // Exec pre hooks
+    console.log(context.prePlugins);
+    if (context.prePlugins) {
+      await context.prePlugins.reduce(async (_, current) => {
+        await invoke(current, 'execPreHook', ctx);
+        return [];
+      }, Promise.resolve([]));
+    }
+
     await userFunction(ctx, data);
+
+    // Exec post hooks
+    if (context.postPlugins) {
+      await context.postPlugins.reduce(async (_, current) => {
+        await invoke(current, 'execPostHook', ctx);
+        return [];
+      }, Promise.resolve([]));
+    }
   };
 
   // Initialize the server with the user's function.

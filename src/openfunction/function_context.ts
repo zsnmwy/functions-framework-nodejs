@@ -1,3 +1,5 @@
+import {OpenFunctionRuntime} from './function_runtime';
+
 /**
  * The OpenFunction's serving context.
  * @public
@@ -30,6 +32,14 @@ export interface OpenFunctionContext {
    * Optional output binding object.
    */
   outputs?: OpenFunctionBinding;
+  /**
+   * Optional pre function exec plugins.
+   */
+  prePlugins?: Array<string | Plugin | undefined>;
+  /**
+   * Optional post function exec plugins.
+   */
+  postPlugins?: Array<string | Plugin | undefined>;
 }
 
 /**
@@ -137,5 +147,46 @@ export class ContextUtils {
    */
   static IsPubSubComponent(component: OpenFunctionComponent): boolean {
     return component?.componentType.split('.')[0] === ComponentType.PubSub;
+  }
+}
+
+/**
+ * The OpenFunction's plugin template.
+ * @public
+ */
+export class Plugin {
+  static OFN_PLUGIN_NAME = 'ofn_plugin_name';
+  static OFN_PLUGIN_VERSION = 'ofn_plugin_version';
+  /**
+   * pre main function exec.
+   * @param ctx - The openfunction runtime .
+   */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public async execPreHook(ctx?: OpenFunctionRuntime) {
+    console.log(
+      `This plugin ${this.get(
+        Plugin.OFN_PLUGIN_NAME
+      )}  method execPreHook is not implemented.`
+    );
+  }
+  /**
+   * post main function exec.
+   * @param ctx - The openfunction runtime .
+   */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public async execPostHook(ctx?: OpenFunctionRuntime) {
+    console.log(
+      `This plugin ${this.get(
+        Plugin.OFN_PLUGIN_NAME
+      )}  method execPostHook is not implemented.`
+    );
+  }
+  /**
+   * get instance filed value.
+   * @param filedName - the instace filedName
+   * @returns filed value.
+   */
+  public get(filedName: string) {
+    return filedName;
   }
 }

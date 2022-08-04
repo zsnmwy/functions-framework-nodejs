@@ -21,10 +21,14 @@
 import * as path from 'path';
 import * as semver from 'semver';
 import * as readPkgUp from 'read-pkg-up';
+import * as fs from 'fs';
 import {pathToFileURL} from 'url';
-import {HandlerFunction} from './functions';
+import {HandlerFunction, OpenFunctionRuntime} from './functions';
 import {SignatureType} from './types';
 import {getRegisteredFunction} from './function_registry';
+import {Plugin} from './openfunction/function_context';
+import {FrameworkOptions} from './options';
+import {forEach} from 'lodash';
 
 // Dynamic import function required to load user code packaged as an
 // ES module is only available on Node.js v13.2.0 and up.
@@ -92,6 +96,7 @@ export async function getUserFunction(
 } | null> {
   try {
     const functionModulePath = getFunctionModulePath(codeLocation);
+
     if (functionModulePath === null) {
       console.error('Provided code is not a loadable module.');
       return null;
@@ -192,4 +197,172 @@ function getFunctionModulePath(codeLocation: string): string | null {
     }
   }
   return path;
+}
+
+type PluginClass = Record<string, any>;
+/**
+ * Returns user's plugin from function file.
+ * Returns null if plugin can't be retrieved.
+ * @return User's plugins or null.
+ */
+export async function getUserPlugins(
+  options: FrameworkOptions
+): Promise<FrameworkOptions> {
+  // Get plugin set
+  const pluginSet: Set<string> = new Set();
+  if (options.context) {
+    if (options.context.prePlugins) {
+      forEach(options.context.prePlugins, plugin => {
+        typeof plugin === 'string' && pluginSet.add(plugin);
+      });
+    }
+    if (options.context.postPlugins) {
+      forEach(options.context.postPlugins, plugin => {
+        typeof plugin === 'string' && pluginSet.add(plugin);
+      });
+    }
+
+    try {
+      type Instance = Record<string, Plugin>;
+      // Load plugin js files
+      const instances: Instance = {};
+
+      const pluginFiles = getPluginFiles(options.sourceLocation);
+      if (pluginFiles === null) {
+        console.warn('[warn-!!!] user plugins files load failed ');
+        options.context.prePlugins = [];
+        options.context.postPlugins = [];
+        return options;
+      }
+
+      // Find plugins class
+      const tempMap: PluginClass = {};
+      for (const pluginFile of pluginFiles) {
+        const jsMoulde = require(pluginFile);
+        processJsModule(jsMoulde, tempMap);
+      }
+
+      // Instance plugin dynamic set ofn_plugin_name
+      const pluginNames = Array.from(pluginSet.values());
+      for (const name of pluginNames) {
+        const module = tempMap[name];
+        if (module) {
+          const instance = new module();
+          instance[Plugin.OFN_PLUGIN_NAME] = module.Name;
+          instance[Plugin.OFN_PLUGIN_VERSION] = module.Version || 'v1';
+
+          //Set default method of pre post get
+          if (!instance.execPreHook) {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            instance.execPreHook = (ctx: OpenFunctionRuntime) => {
+              console.log(
+                `This plugin ${name}  method execPreHook is not implemented.`
+              );
+            };
+          }
+          if (!instance.execPostHook) {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            instance.execPostHook = (ctx: OpenFunctionRuntime) => {
+              console.log(
+                `This plugin ${name}  method execPostHook is not implemented.`
+              );
+            };
+          }
+          if (!instance.get) {
+            instance.get = (filedName: string) => {
+              for (const key in instance) {
+                if (key === filedName) {
+                  return instance[key];
+                }
+              }
+            };
+          }
+          instances[name] = instance as Plugin;
+        }
+      }
+
+      const prePlugins: Array<Plugin> = [];
+      const postPlugins: Array<Plugin> = [];
+      if (options.context.prePlugins) {
+        forEach(options.context.prePlugins, plugin => {
+          if (typeof plugin === 'string') {
+            const instance = instances[plugin];
+            typeof instance === 'object' && prePlugins.push(instance);
+          }
+        });
+      }
+      if (options.context.postPlugins) {
+        forEach(options.context.postPlugins, plugin => {
+          if (typeof plugin === 'string') {
+            const instance = instances[plugin];
+            typeof instance === 'object' && postPlugins.push(instance);
+          }
+        });
+      }
+
+      options.context.prePlugins = prePlugins;
+      options.context.postPlugins = postPlugins;
+    } catch (error) {
+      console.error('load plugins error reason: \n');
+      console.error(error);
+    }
+  }
+  return options;
+}
+
+/**
+ * Returns resolved path to the dir containing the user plugins.
+ * Returns null if the path is not exits
+ * @param codeLocation Directory with user's code.
+ * @return Resolved path or null.
+ */
+function getPluginFiles(codeLocation: string): Array<string> | null {
+  const pluginFiles: Array<string> = [];
+  try {
+    const param = path.resolve(codeLocation + '/plugins');
+    const files = fs.readdirSync(param);
+
+    for (const file of files) {
+      pluginFiles.push(require.resolve(path.join(param, file)));
+    }
+  } catch (ex) {
+    const err: Error = <Error>ex;
+    console.error(err.message);
+    return null;
+  }
+  return pluginFiles;
+}
+/**
+ * Returns rdetermine whether it is a class.
+ * Returns boolean is can be class
+ * @param obj jsmodule.
+ * @return boolean of it is a class.
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function couldBeClass(obj: any): boolean {
+  return (
+    typeof obj === 'function' &&
+    obj.prototype !== undefined &&
+    obj.prototype.constructor === obj &&
+    obj.toString().slice(0, 5) === 'class'
+  );
+}
+
+/**
+ * Process jsMoulde if it can be a plugin class put it into tempMap.
+ * @param obj jsmodule.
+ * @param tempMap PluginClass.
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function processJsModule(obj: any, tempMap: PluginClass) {
+  if (typeof obj === 'object') {
+    for (const o in obj) {
+      if (couldBeClass(obj[o]) && obj[o].Name) {
+        tempMap[obj[o].Name] = obj[o];
+      }
+    }
+  }
+  if (couldBeClass(obj) && obj.Name) {
+    tempMap[obj.Name] = obj;
+  }
 }
