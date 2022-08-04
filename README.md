@@ -1,4 +1,7 @@
 # Functions Framework for Node.js
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 [![npm version](https://img.shields.io/npm/v/@openfunction/functions-framework.svg)](https://www.npmjs.com/package/@openfunction/functions-framework) [![npm downloads](https://img.shields.io/npm/dm/@openfunction/functions-framework.svg)](https://npmcharts.com/compare/@openfunction/functions-framework?minimal=true)
 
@@ -287,3 +290,23 @@ Contributions to this library are welcome and encouraged. See [CONTRIBUTING](CON
 [ff_node_unit_link]:  https://github.com/openfunction/functions-framework-nodejs/actions?query=workflow%3A"Node.js+Unit+CI"
 [ff_node_lint_img]: https://github.com/openfunction/functions-framework-nodejs/workflows/Node.js%20Lint%20CI/badge.svg
 [ff_node_lint_link]:  https://github.com/openfunction/functions-framework-nodejs/actions?query=workflow%3A"Node.js+Lint+CI"
+
+## Contributors ✨
+
+Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tr>
+    <td align="center"><a href="https://github.com/YADROOKIE"><img src="https://avatars.githubusercontent.com/u/43526965?v=4?s=100" width="100px;" alt=""/><br /><sub><b>MachaYAD</b></sub></a><br /><a href="https://github.com/OpenFunction/functions-framework-nodejs/commits?author=YADROOKIE" title="Code">💻</a></td>
+  </tr>
+</table>
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
