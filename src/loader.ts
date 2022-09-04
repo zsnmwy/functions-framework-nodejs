@@ -31,6 +31,12 @@ import {Plugin, PluginStore, PluginMap} from './openfunction/plugin';
 import {HandlerFunction} from './functions';
 import {getRegisteredFunction} from './function_registry';
 import {SignatureType} from './types';
+import {FrameworkOptions} from './options';
+import {OpenFunctionContext} from './openfunction/context';
+import {
+  SKYWALKINGNAME,
+  SkyWalkingPlugin,
+} from './openfunction/plugin/skywalking/skywalking';
 
 // Dynamic import function required to load user code packaged as an
 // ES module is only available on Node.js v13.2.0 and up.
@@ -271,4 +277,48 @@ function getPluginsModulePath(codeLocation: string): string[] | null {
     console.error('Fail to load plugins: %s', ex);
     return null;
   }
+}
+
+/**
+ * It loads BUIDIN type plugins from the /openfunction/plugin.
+ * @param context - The context of OpenFunction.
+ */
+export async function loadBuidInPlugins(options: FrameworkOptions) {
+  if (!options.context) {
+    console.warn("The context is undefined can't load BUIDIN type plugins");
+    return;
+  }
+  const store = PluginStore.Instance(PluginStore.Type.BUILTIN);
+  //Provide system info for BUILDIN type plugins
+
+  if (checkTraceConfig(options.context)) {
+    const skywalking = new SkyWalkingPlugin(options);
+    store.register(skywalking);
+    options.context.prePlugins?.push(SKYWALKINGNAME);
+    options.context.postPlugins?.push(SKYWALKINGNAME);
+  }
+}
+
+/**
+ * It check trace config ,it will set default value if it is enbaled.
+ * @param tracing - The config of TraceConfig.
+ */
+function checkTraceConfig(context: OpenFunctionContext): boolean {
+  if (!context.tracing) {
+    console.warn('TraceConfig is invalid');
+    return false;
+  }
+  if (!context.tracing.enabled) {
+    return false;
+  }
+  if (!context.tracing.tags) {
+    context.tracing.tags = {};
+  }
+  //Set default trace provider config
+  context.tracing.provider = {
+    name: context.tracing.provider?.name || SKYWALKINGNAME,
+    oapServer: context.tracing.provider?.oapServer || '127.0.0.1:11800',
+  };
+
+  return true;
 }
