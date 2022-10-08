@@ -1,6 +1,6 @@
 {
   "name": "@openfunction/functions-framework",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "FaaS (Function as a service) framework for writing portable Node.js functions",
   "engines": {
     "node": ">=13.0.0"
