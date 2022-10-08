@@ -21,9 +21,9 @@ import * as process from 'process';
 import {createHttpTerminator} from 'http-terminator';
 
 import getAysncServer from './openfunction/async_server';
-import {OpenFunctionContext, ContextUtils} from './openfunction/context';
+import {ContextUtils} from './openfunction/context';
 
-import {getUserFunction, getFunctionPlugins, loadBuidInPlugins} from './loader';
+import {getUserFunction, getFunctionPlugins, getBuiltinPlugins} from './loader';
 import {ErrorHandler} from './invoker';
 import {getServer} from './server';
 import {parseOptions, helpText, OptionsError} from './options';
@@ -54,14 +54,15 @@ export const main = async () => {
     }
     const {userFunction, signatureType} = loadedFunction;
 
-    // First load BUIDIN type plugin
-    await loadBuidInPlugins(options);
     // Load function plugins before starting server
+    // First, we load system built-in function plugins
+    await getBuiltinPlugins(options.context!);
+    // Then, we load user-defined function plugins
     await getFunctionPlugins(options.sourceLocation);
 
     // Try to determine the server runtime
     // Considering the async runtime in the first place
-    if (ContextUtils.IsAsyncRuntime(options.context as OpenFunctionContext)) {
+    if (ContextUtils.IsAsyncRuntime(options.context!)) {
       options.context!.port = options.port;
 
       const server = getAysncServer(

@@ -25,11 +25,11 @@ export interface OpenFunctionContext {
   /**
    * Optional input binding object.
    */
-  inputs?: OpenFunctionBinding;
+  inputs?: Record<string, OpenFunctionComponent>;
   /**
    * Optional output binding object.
    */
-  outputs?: OpenFunctionBinding;
+  outputs?: Record<string, OpenFunctionComponent>;
   /**
    * Optional plugins to be executed before user function.
    */
@@ -39,20 +39,9 @@ export interface OpenFunctionContext {
    */
   postPlugins?: string[];
   /**
-   * Optional trace config
+   * Optional trace plugin config.
    */
-  tracing?: TraceConfig;
-}
-
-/**
- * The binding interface of the context.
- * @public
- */
-export interface OpenFunctionBinding {
-  /**
-   * The hash map of the binding.
-   */
-  [key: string]: OpenFunctionComponent;
+  pluginsTracing?: TraceConfig;
 }
 
 /**
@@ -153,41 +142,57 @@ export class ContextUtils {
 }
 
 /**
- * The config of the trace.
+ * The config of the trace plugin.
  * @public
  */
 export interface TraceConfig {
   /**
-   * This is trace switch
+   * Switch of the tracer
    */
   enabled: boolean;
   /**
-   * Trace Provider
+   * Provider of the tracer
    */
-  provider?: TraceProvider;
+  provider: TraceProvider;
   /**
-   * Trace tags
+   * Optional tags of the tracer
    */
-  tags?: Record<string, string>;
+  tags?: Record<string, string> & {func?: string};
   /**
-   * Trace baggage
+   * Optional baggage of the tracer
    */
   baggage?: Record<string, string>;
 }
 
 /**
- * The trace provider info.
+ * The trace provider object.
  * @public
  */
 export interface TraceProvider {
   /**
-   * Provider name
-   * Now is just support skywalking
+   * The name of the provider.
    */
-  name: string;
+  name:
+    | `${TraceProviderType}`
+    | `${Capitalize<TraceProviderType>}`
+    | `${Uppercase<TraceProviderType>}`;
   /**
-   * OapServer address
-   * example [skywalking-oap:11800]
+   * The address of the OAP server.
    */
   oapServer: string;
+}
+
+/**
+ * Defining trace provider type enumeration.
+ * @public
+ */
+export enum TraceProviderType {
+  /**
+   * The SkyWalking type.
+   */
+  SkyWalking = 'skywalking',
+  /**
+   * The OpenTelemetry type.
+   */
+  OpenTelemetry = 'opentelemetry',
 }

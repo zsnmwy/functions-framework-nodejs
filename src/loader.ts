@@ -22,21 +22,20 @@ import * as fs from 'fs';
 import * as path from 'path';
 import {pathToFileURL} from 'url';
 
+import Debug from 'debug';
 import * as semver from 'semver';
 import * as readPkgUp from 'read-pkg-up';
-import {forEach} from 'lodash';
+import {forEach, set} from 'lodash';
 
+import {TracingPlugin} from './openfunction/plugins';
 import {Plugin, PluginStore, PluginMap} from './openfunction/plugin';
+import {OpenFunctionContext} from './openfunction/context';
 
 import {HandlerFunction} from './functions';
 import {getRegisteredFunction} from './function_registry';
 import {SignatureType} from './types';
-import {FrameworkOptions} from './options';
-import {OpenFunctionContext} from './openfunction/context';
-import {
-  SKYWALKINGNAME,
-  SkyWalkingPlugin,
-} from './openfunction/plugin/skywalking/skywalking';
+
+const debug = Debug('common:loader');
 
 // Dynamic import function required to load user code packaged as an
 // ES module is only available on Node.js v13.2.0 and up.
@@ -248,12 +247,13 @@ export async function getFunctionPlugins(
     } catch (ex) {
       const err = <Error>ex;
       console.error(
-        "Provided module can't be loaded. Plesae make sure your module extend Plugin class properly." +
+        'Provided module cannot be loaded. Plesae make sure your module extend Plugin class properly.' +
           `\nDetailed stack trace: ${err.stack}`
       );
     }
   }
 
+  debug('Custom plugins loaded: %o', Object.keys(plugins));
   return plugins;
 }
 
@@ -279,46 +279,32 @@ function getPluginsModulePath(codeLocation: string): string[] | null {
   }
 }
 
-/**
- * It loads BUIDIN type plugins from the /openfunction/plugin.
- * @param context - The context of OpenFunction.
- */
-export async function loadBuidInPlugins(options: FrameworkOptions) {
-  if (!options.context) {
-    console.warn("The context is undefined can't load BUIDIN type plugins");
-    return;
-  }
+export async function getBuiltinPlugins(
+  context: OpenFunctionContext
+): Promise<PluginMap | null> {
+  if (!context) return null;
+
+  // Setup store for builtin plugins
   const store = PluginStore.Instance(PluginStore.Type.BUILTIN);
-  //Provide system info for BUILDIN type plugins
+  const plugins: PluginMap = {};
 
-  if (checkTraceConfig(options.context)) {
-    const skywalking = new SkyWalkingPlugin(options);
-    store.register(skywalking);
-    options.context.prePlugins?.push(SKYWALKINGNAME);
-    options.context.postPlugins?.push(SKYWALKINGNAME);
-  }
-}
+  // Try to create and add tracing plugin
+  try {
+    // Save function name into configuration and create the plugin
+    set(context, 'pluginsTracing.tags.func', context.name);
+    const tracing = TracingPlugin.Create(context.pluginsTracing);
 
-/**
- * It check trace config ,it will set default value if it is enbaled.
- * @param tracing - The config of TraceConfig.
- */
-function checkTraceConfig(context: OpenFunctionContext): boolean {
-  if (!context.tracing) {
-    console.warn('TraceConfig is invalid');
-    return false;
+    if (tracing) {
+      store.register(tracing);
+      plugins[tracing.name] = tracing;
+    }
+  } catch (ex) {
+    const err = <Error>ex;
+    console.error(
+      `Tracing plugin cannot be initialized.\nDetailed stack trace: ${err.stack}`
+    );
   }
-  if (!context.tracing.enabled) {
-    return false;
-  }
-  if (!context.tracing.tags) {
-    context.tracing.tags = {};
-  }
-  //Set default trace provider config
-  context.tracing.provider = {
-    name: context.tracing.provider?.name || SKYWALKINGNAME,
-    oapServer: context.tracing.provider?.oapServer || '127.0.0.1:11800',
-  };
 
-  return true;
+  debug('Builtin plugins loaded: %o', Object.keys(plugins));
+  return plugins;
 }
