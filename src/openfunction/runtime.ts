@@ -52,6 +52,11 @@ export abstract class OpenFunctionRuntime {
   readonly locals: Record<string, any>;
 
   /**
+   * The optional error object to hold exception data.
+   */
+  error?: Error;
+
+  /**
    * Constructor of the OpenFunctionRuntime.
    */
   constructor(context: OpenFunctionContext) {
@@ -107,16 +112,23 @@ export abstract class OpenFunctionRuntime {
     const sysPlugins = PluginStore.Instance(PluginStore.Type.BUILTIN);
 
     return async data => {
-      // Execute pre hooks, system plugins go first
-      await sysPlugins.execPreHooks(ctx);
+      // Execute pre hooks, user plugins go first
       await userPlugins.execPreHooks(ctx);
+      await sysPlugins.execPreHooks(ctx);
 
-      // Execute user function
-      await userFunction(ctx, data);
+      // Execute user function and save error for lazy reporting
+      try {
+        await userFunction(ctx, data);
+      } catch (ex) {
+        ctx.error = <Error>ex;
+      }
 
-      // Execute pre hooks, system plugins go last
+      // Execute pre hooks, user plugins go last
       await sysPlugins.execPostHooks(ctx);
       await userPlugins.execPostHooks(ctx);
+
+      // Report error if exists at the very last
+      if (ctx.error) throw ctx.error;
     };
   }
 

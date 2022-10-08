@@ -1,7 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import {get, invoke, omit, transform, trim} from 'lodash';
+import * as Debug from 'debug';
+import {get, invoke, isEmpty, omit, transform, trim} from 'lodash';
 
 import {OpenFunctionRuntime} from './runtime';
+
+const debug = Debug('ofn:plugin');
 
 /**
  * Defining an abstract class to represent Plugin.
@@ -109,16 +112,24 @@ export class PluginStore {
   }
 
   /**
+   * Internal store type.
+   */
+  #type = PluginStoreType.CUSTOM;
+
+  /**
    * Internal store object.
    */
-  #store: PluginMap | null = null;
+  readonly #store: PluginMap | null = null;
 
   /**
    * Private constructor of PluginStore.
    * @param type - PluginStoreType - The type of store you want to use.
    */
   private constructor(type: PluginStoreType) {
-    if (!this.#store) this.#store = stores[type];
+    if (!this.#store) {
+      this.#type = type;
+      this.#store = stores[type];
+    }
   }
 
   /**
@@ -149,6 +160,14 @@ export class PluginStore {
   }
 
   /**
+   * Getter that tells whether the store is custom type.
+   * @returns `true` if the `#type` is `PluginStoreType.CUSTOM`.
+   */
+  get #isCustomStore(): boolean {
+    return this.#type === PluginStoreType.CUSTOM;
+  }
+
+  /**
    * It invokes the `execPreHook` function of each plugin in the order specified by the `seq` array
    * @param ctx - The context object that is passed to the plugin.
    * @param [seq] - The sequence of plugins to be executed. If not specified, all plugins will be executed.
@@ -157,7 +176,7 @@ export class PluginStore {
     await this.#invokePluginBySeq(
       ctx,
       'execPreHook',
-      seq || get(ctx, 'prePlugins', null)
+      seq || (this.#isCustomStore && get(ctx, 'prePlugins'))
     );
   }
 
@@ -170,7 +189,7 @@ export class PluginStore {
     await this.#invokePluginBySeq(
       ctx,
       'execPostHook',
-      seq || get(ctx, 'postPlugins', null)
+      seq || (this.#isCustomStore && get(ctx, 'postPlugins'))
     );
   }
 
@@ -185,12 +204,23 @@ export class PluginStore {
     method: keyof Plugin,
     seq: string[]
   ) {
-    const pluginNames = seq ?? this.#store!._seq;
+    const pluginNames = !isEmpty(seq) ? seq : this.#store!._seq ?? [];
     const plugins = this.#store!;
 
     for (const pluginName of pluginNames) {
       const plugin = plugins[pluginName];
-      await invoke(plugin, method, ctx, plugins);
+      debug('Executing "%s" of plugin "%s"', method, pluginName);
+
+      // Try to invoke the plugin method and catch exceptions
+      try {
+        await invoke(plugin, method, ctx, plugins);
+      } catch (ex) {
+        const err = <Error>ex;
+        console.error(
+          `Failed to invoke "${method}" of plugin "${pluginName}"` +
+            `\nDetailed stack trace: ${err.stack}`
+        );
+      }
     }
   }
 }

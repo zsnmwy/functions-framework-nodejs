@@ -117,11 +117,6 @@ export interface OpenFunction {
 export const openfunction: (functionName: string, handler: OpenFunction) => void;
 
 // @public
-export interface OpenFunctionBinding {
-    [key: string]: OpenFunctionComponent;
-}
-
-// @public
 export interface OpenFunctionComponent {
     componentName: string;
     componentType: `${ComponentType}.${string}`;
@@ -132,14 +127,14 @@ export interface OpenFunctionComponent {
 
 // @public
 export interface OpenFunctionContext {
-    inputs?: OpenFunctionBinding;
+    inputs?: Record<string, OpenFunctionComponent>;
     name: string;
-    outputs?: OpenFunctionBinding;
+    outputs?: Record<string, OpenFunctionComponent>;
+    pluginsTracing?: TraceConfig;
     port?: string;
     postPlugins?: string[];
     prePlugins?: string[];
     runtime: `${RuntimeType}` | `${Capitalize<RuntimeType>}` | `${Uppercase<RuntimeType>}`;
-    tracing?: TraceConfig;
     version: string;
 }
 
@@ -147,6 +142,7 @@ export interface OpenFunctionContext {
 export abstract class OpenFunctionRuntime {
     constructor(context: OpenFunctionContext);
     protected readonly context: OpenFunctionContext;
+    error?: Error;
     getPlugin(name: string): Plugin_2;
     readonly locals: Record<string, any>;
     static Parse(context: OpenFunctionContext): OpenFunctionRuntime;
@@ -193,14 +189,22 @@ export enum RuntimeType {
 export interface TraceConfig {
     baggage?: Record<string, string>;
     enabled: boolean;
-    provider?: TraceProvider;
-    tags?: Record<string, string>;
+    provider: TraceProvider;
+    tags?: Record<string, string> & {
+        func?: string;
+    };
 }
 
 // @public
 export interface TraceProvider {
-    name: string;
+    name: `${TraceProviderType}` | `${Capitalize<TraceProviderType>}` | `${Uppercase<TraceProviderType>}`;
     oapServer: string;
+}
+
+// @public
+export enum TraceProviderType {
+    OpenTelemetry = "opentelemetry",
+    SkyWalking = "skywalking"
 }
 
 // (No @packageDocumentation comment for this package)

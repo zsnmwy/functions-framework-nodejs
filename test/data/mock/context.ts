@@ -1,4 +1,7 @@
-import {OpenFunctionContext} from '../../../src';
+import {
+  OpenFunctionContext,
+  TraceConfig,
+} from '../../../src/openfunction/context';
 
 export const KnativeBase: OpenFunctionContext = {
   name: 'test-context',
@@ -65,5 +68,21 @@ export const AsyncBase: OpenFunctionContext = {
       componentName: 'pubsub-mqtt',
       componentType: 'pubsub.mqtt',
     },
+  },
+};
+
+export const TracerPluginBase: TraceConfig = {
+  enabled: true,
+  provider: {
+    name: 'skywalking',
+    oapServer: 'localhost:11800',
+  },
+  tags: {
+    tag1: 'value1',
+    tag2: 'value2',
+  },
+  baggage: {
+    key: 'key1',
+    value: 'value1',
   },
 };
