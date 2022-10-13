@@ -206,7 +206,7 @@ class DaprRuntime extends OpenFunctionRuntime {
      * TODO: Should determine whether to use GRPC channel
      */
     this.daprClient = new DaprClient(
-      undefined,
+      process.env.DAPR_HOST,
       this.sidecarPort.HTTP,
       CommunicationProtocolEnum.HTTP
     );

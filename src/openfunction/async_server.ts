@@ -20,7 +20,7 @@ export default function (
   context: OpenFunctionContext
 ): AsyncFunctionServer {
   // Initailize Dapr server
-  const app = new DaprServer('localhost', context.port);
+  const app = new DaprServer('127.0.0.1', context.port, process.env.DAPR_HOST);
 
   // Create wrapper for user function
   const wrapper = OpenFunctionRuntime.WrapUserFunction(userFunction, context);
