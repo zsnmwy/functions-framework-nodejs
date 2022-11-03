@@ -8,6 +8,7 @@
 /// <reference types="qs" />
 
 import { CloudEventV1 as CloudEvent } from 'cloudevents';
+import { IndexedFieldWithPossiblyUndefined } from 'lodash';
 import { ParamsDictionary } from 'express-serve-static-core';
 import { ParsedQs } from 'qs';
 import { Request as Request_3 } from 'express';
@@ -165,7 +166,7 @@ class Plugin_2 {
     constructor(name: string, version?: string);
     execPostHook(ctx: OpenFunctionRuntime | null, plugins: Record<string, Plugin_2>): Promise<void>;
     execPreHook(ctx: OpenFunctionRuntime | null, plugins: Record<string, Plugin_2>): Promise<void>;
-    get(prop: string): any;
+    get(prop: string): string extends infer T ? T extends string ? T extends keyof this ? this[T] : T extends `${infer FieldKey}[${infer IndexKey}]` ? FieldKey extends keyof this ? IndexedFieldWithPossiblyUndefined<this[FieldKey], IndexKey> : undefined : undefined : never : never;
     readonly name: string;
     readonly version: string;
 }
