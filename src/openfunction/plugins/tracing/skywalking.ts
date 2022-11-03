@@ -42,14 +42,14 @@ export default class SkyWalking extends Tracing {
       ContextManager.currentSpan ??
       context.newEntrySpan('/', this.#getCarrier(ctx));
 
-    span.operation = get(ctx, 'name');
+    span.operation = get(ctx, 'name')!;
     span.component = this.#component;
     span.layer = SpanLayer.FAAS;
 
     // Pass through some typical tags per the context
     span.tag({
       key: 'runtime',
-      val: get(ctx, 'runtime'),
+      val: get(ctx, 'runtime')!,
       overridable: false,
     });
 

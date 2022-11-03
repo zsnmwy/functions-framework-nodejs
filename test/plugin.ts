@@ -46,7 +46,7 @@ describe('Store for custom and builtin plugins', () => {
   it('ensures the sequence of long running async plugins', async () => {
     customs.register(new Concater());
 
-    const size = random(0, 9);
+    const size = random(1, 9);
     const concater = customs.get('concater');
     const seq = fill(Array(size), concater.name);
 

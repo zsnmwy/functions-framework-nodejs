@@ -1,8 +1,8 @@
 {
   "metadata": {
     "toolPackage": "@microsoft/api-extractor",
-    "toolVersion": "7.32.0",
-    "schemaVersion": 1009,
+    "toolVersion": "7.33.5",
+    "schemaVersion": 1010,
     "oldestForwardsCompatibleVersion": 1001,
     "tsdocConfig": {
       "$schema": "https://developer.microsoft.com/json-schemas/tsdoc/v0/tsdoc.schema.json",
@@ -195,6 +195,7 @@
               "text": "<T>) => void"
             }
           ],
+          "fileUrlPath": "src/function_registry.ts",
           "isReadonly": true,
           "releaseTag": "Public",
           "name": "cloudEvent",
@@ -221,6 +222,7 @@
               "text": "> "
             }
           ],
+          "fileUrlPath": "src/functions.ts",
           "releaseTag": "Public",
           "typeParameters": [
             {
@@ -307,6 +309,7 @@
               "text": "> "
             }
           ],
+          "fileUrlPath": "src/functions.ts",
           "releaseTag": "Public",
           "typeParameters": [
             {
@@ -402,6 +405,7 @@
               "text": "export interface CloudFunctionsContext "
             }
           ],
+          "fileUrlPath": "src/functions.ts",
           "releaseTag": "Public",
           "name": "CloudFunctionsContext",
           "preserveMemberOrder": false,
@@ -527,6 +531,7 @@
               "text": "export declare enum ComponentType "
             }
           ],
+          "fileUrlPath": "src/openfunction/context.ts",
           "releaseTag": "Public",
           "name": "ComponentType",
           "preserveMemberOrder": false,
@@ -607,6 +612,7 @@
               "text": ";"
             }
           ],
+          "fileUrlPath": "src/functions.ts",
           "releaseTag": "Public",
           "name": "Context",
           "typeTokenRange": {
@@ -624,6 +630,7 @@
               "text": "export declare class ContextUtils "
             }
           ],
+          "fileUrlPath": "src/openfunction/context.ts",
           "releaseTag": "Public",
           "name": "ContextUtils",
           "preserveMemberOrder": false,
@@ -833,6 +840,7 @@
               "text": "export interface Data "
             }
           ],
+          "fileUrlPath": "src/functions.ts",
           "releaseTag": "Public",
           "name": "Data",
           "preserveMemberOrder": false,
@@ -877,6 +885,7 @@
               "text": "export interface EventFunction "
             }
           ],
+          "fileUrlPath": "src/functions.ts",
           "releaseTag": "Public",
           "name": "EventFunction",
           "preserveMemberOrder": false,
@@ -954,6 +963,7 @@
               "text": "export interface EventFunctionWithCallback "
             }
           ],
+          "fileUrlPath": "src/functions.ts",
           "releaseTag": "Public",
           "name": "EventFunctionWithCallback",
           "preserveMemberOrder": false,
@@ -1114,6 +1124,7 @@
               "text": ";"
             }
           ],
+          "fileUrlPath": "src/functions.ts",
           "releaseTag": "Public",
           "name": "HandlerFunction",
           "typeParameters": [
@@ -1157,6 +1168,7 @@
               "text": ") => void"
             }
           ],
+          "fileUrlPath": "src/function_registry.ts",
           "isReadonly": true,
           "releaseTag": "Public",
           "name": "http",
@@ -1175,6 +1187,7 @@
               "text": "export interface HttpFunction "
             }
           ],
+          "fileUrlPath": "src/functions.ts",
           "releaseTag": "Public",
           "name": "HttpFunction",
           "preserveMemberOrder": false,
@@ -1253,6 +1266,7 @@
               "text": "export interface HttpFunctionResponse "
             }
           ],
+          "fileUrlPath": "src/functions.ts",
           "releaseTag": "Public",
           "name": "HttpFunctionResponse",
           "preserveMemberOrder": false,
@@ -1374,6 +1388,7 @@
               "text": ";"
             }
           ],
+          "fileUrlPath": "src/functions.ts",
           "releaseTag": "Public",
           "name": "LegacyCloudFunctionsContext",
           "typeTokenRange": {
@@ -1391,6 +1406,7 @@
               "text": "export interface LegacyEvent "
             }
           ],
+          "fileUrlPath": "src/functions.ts",
           "releaseTag": "Public",
           "name": "LegacyEvent",
           "preserveMemberOrder": false,
@@ -1463,6 +1479,7 @@
               "text": "export interface OpenFunction "
             }
           ],
+          "fileUrlPath": "src/functions.ts",
           "releaseTag": "Public",
           "name": "OpenFunction",
           "preserveMemberOrder": false,
@@ -1553,6 +1570,7 @@
               "text": ") => void"
             }
           ],
+          "fileUrlPath": "src/function_registry.ts",
           "isReadonly": true,
           "releaseTag": "Public",
           "name": "openfunction",
@@ -1571,6 +1589,7 @@
               "text": "export interface OpenFunctionComponent "
             }
           ],
+          "fileUrlPath": "src/openfunction/context.ts",
           "releaseTag": "Public",
           "name": "OpenFunctionComponent",
           "preserveMemberOrder": false,
@@ -1737,6 +1756,7 @@
               "text": "export interface OpenFunctionContext "
             }
           ],
+          "fileUrlPath": "src/openfunction/context.ts",
           "releaseTag": "Public",
           "name": "OpenFunctionContext",
           "preserveMemberOrder": false,
@@ -2071,6 +2091,7 @@
               "text": "export declare abstract class OpenFunctionRuntime "
             }
           ],
+          "fileUrlPath": "src/openfunction/runtime.ts",
           "releaseTag": "Public",
           "name": "OpenFunctionRuntime",
           "preserveMemberOrder": false,
@@ -2740,6 +2761,7 @@
               "text": "export declare class Plugin "
             }
           ],
+          "fileUrlPath": "src/openfunction/plugin.ts",
           "releaseTag": "Public",
           "name": "Plugin_2",
           "preserveMemberOrder": false,
@@ -2985,7 +3007,16 @@
                 },
                 {
                   "kind": "Content",
-                  "text": "any"
+                  "text": "string extends infer T ? T extends string ? T extends keyof this ? this[T] : T extends `${infer FieldKey}[${infer IndexKey}]` ? FieldKey extends keyof this ? import(\"lodash\")."
+                },
+                {
+                  "kind": "Reference",
+                  "text": "IndexedFieldWithPossiblyUndefined",
+                  "canonicalReference": "@types/lodash!\"\\\"../index\\\"\".IndexedFieldWithPossiblyUndefined:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": "<this[FieldKey], IndexKey> : undefined : undefined : never : never"
                 },
                 {
                   "kind": "Content",
@@ -2995,7 +3026,7 @@
               "isStatic": false,
               "returnTypeTokenRange": {
                 "startIndex": 3,
-                "endIndex": 4
+                "endIndex": 6
               },
               "releaseTag": "Public",
               "isProtected": false,
@@ -3093,6 +3124,7 @@
               "text": " "
             }
           ],
+          "fileUrlPath": "src/functions.ts",
           "releaseTag": "Public",
           "name": "Request_2",
           "preserveMemberOrder": false,
@@ -3143,6 +3175,7 @@
               "text": "export declare enum RuntimeType "
             }
           ],
+          "fileUrlPath": "src/openfunction/context.ts",
           "releaseTag": "Public",
           "name": "RuntimeType",
           "preserveMemberOrder": false,
@@ -3201,6 +3234,7 @@
               "text": "export interface TraceConfig "
             }
           ],
+          "fileUrlPath": "src/openfunction/context.ts",
           "releaseTag": "Public",
           "name": "TraceConfig",
           "preserveMemberOrder": false,
@@ -3337,6 +3371,7 @@
               "text": "export interface TraceProvider "
             }
           ],
+          "fileUrlPath": "src/openfunction/context.ts",
           "releaseTag": "Public",
           "name": "TraceProvider",
           "preserveMemberOrder": false,
@@ -3453,6 +3488,7 @@
               "text": "export declare enum TraceProviderType "
             }
           ],
+          "fileUrlPath": "src/openfunction/context.ts",
           "releaseTag": "Public",
           "name": "TraceProviderType",
           "preserveMemberOrder": false,

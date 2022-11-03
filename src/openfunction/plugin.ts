@@ -176,7 +176,7 @@ export class PluginStore {
     await this.#invokePluginBySeq(
       ctx,
       'execPreHook',
-      seq || (this.#isCustomStore && get(ctx, 'prePlugins'))
+      seq || (this.#isCustomStore && get(ctx, 'prePlugins')) || []
     );
   }
 
@@ -189,7 +189,7 @@ export class PluginStore {
     await this.#invokePluginBySeq(
       ctx,
       'execPostHook',
-      seq || (this.#isCustomStore && get(ctx, 'postPlugins'))
+      seq || (this.#isCustomStore && get(ctx, 'postPlugins')) || []
     );
   }
 

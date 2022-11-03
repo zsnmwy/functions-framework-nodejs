@@ -109,7 +109,7 @@ describe('OpenFunction - Async', () => {
         // Then forward received data to output channel
         const output = 'mqtt_pub';
         broker.subscribe(
-          get(TEST_CONTEXT, `outputs.${output}.uri`),
+          get(TEST_CONTEXT, `outputs.${output}.uri`)!,
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
           (packet, _) => {
             const payload = JSON.parse(Buffer.from(packet.payload).toString());
@@ -153,7 +153,7 @@ describe('OpenFunction - Async', () => {
 
           // Set local data for post hook plugin
           ctx.locals.start = start;
-          ctx.locals.end = -start;
+          ctx.locals.end = -start!;
 
           // Passthrough test done handler
           ctx.locals.done = done;
