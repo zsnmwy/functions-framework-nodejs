@@ -13,6 +13,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "James-JLC",
+      "name": "James.Ji",
+      "avatar_url": "https://avatars.githubusercontent.com/u/3123790?v=4",
+      "profile": "https://github.com/James-JLC",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "contributorsPerLine": 7,
@@ -20,5 +29,6 @@
   "projectOwner": "OpenFunction",
   "repoType": "github",
   "repoHost": "https://github.com",
-  "skipCi": true
+  "skipCi": true,
+  "commitConvention": "angular"
 }
