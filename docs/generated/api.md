@@ -154,7 +154,7 @@ export abstract class OpenFunctionRuntime {
     setTrigger(req: Request_3, res?: Response_2): void;
     get sidecarPort(): {
         HTTP: string;
-        GRRC: string;
+        GRPC: string;
     };
     // Warning: (ae-forgotten-export) The symbol "OpenFunctionTrigger" needs to be exported by the entry point index.d.ts
     protected trigger?: OpenFunctionTrigger;
