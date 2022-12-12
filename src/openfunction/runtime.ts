@@ -138,7 +138,7 @@ export abstract class OpenFunctionRuntime {
   get sidecarPort() {
     return {
       HTTP: env.DAPR_HTTP_PORT || '3500',
-      GRRC: env.DAPR_GRPC_PORT || '50001',
+      GRPC: env.DAPR_GRPC_PORT || '50001',
     };
   }
 

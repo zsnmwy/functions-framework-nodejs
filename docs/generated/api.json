@@ -2617,7 +2617,7 @@
                 },
                 {
                   "kind": "Content",
-                  "text": "{\n        HTTP: string;\n        GRRC: string;\n    }"
+                  "text": "{\n        HTTP: string;\n        GRPC: string;\n    }"
                 },
                 {
                   "kind": "Content",
