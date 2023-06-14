@@ -22,6 +22,15 @@
       "contributions": [
         "bug"
       ]
+    },
+    {
+      "login": "yi-ge-dian",
+      "name": "yi-ge-dian",
+      "avatar_url": "https://avatars.githubusercontent.com/u/68337798?v=4",
+      "profile": "https://onepoint.link",
+      "contributions": [
+        "maintenance"
+      ]
     }
   ],
   "contributorsPerLine": 7,
@@ -30,5 +39,6 @@
   "repoType": "github",
   "repoHost": "https://github.com",
   "skipCi": true,
-  "commitConvention": "angular"
+  "commitConvention": "angular",
+  "commitType": "docs"
 }
