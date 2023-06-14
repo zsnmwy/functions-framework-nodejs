@@ -20,7 +20,7 @@ const TEST_CONTEXT = {
 const TEST_PAYLOAD = Payload.Plain.RAW;
 
 describe('OpenFunction - HTTP Binding', () => {
-  const APPID = 'http.dapr';
+  const APPID = 'http_dapr';
 
   before(done => {
     if (shell.exec('dapr', {silent: true}).code !== 0)
