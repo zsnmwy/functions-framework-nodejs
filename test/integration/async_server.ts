@@ -15,7 +15,7 @@ const TEST_PAYLOAD = Payload.Plain.RAW;
 const TEST_PAYLOAD_CE = Payload.Plain.CE;
 
 describe('OpenFunction - Async', () => {
-  const APPID = 'async.dapr';
+  const APPID = 'async_dapr';
   const broker = MQTT.Server();
   const server = createServer(broker.handle);
   before(done => {
