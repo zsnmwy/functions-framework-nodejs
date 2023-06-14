@@ -1,6 +1,6 @@
 # Functions Framework for Node.js
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 [![npm version](https://img.shields.io/npm/v/@openfunction/functions-framework.svg)](https://www.npmjs.com/package/@openfunction/functions-framework) [![npm downloads](https://img.shields.io/npm/dm/@openfunction/functions-framework.svg)](https://npmcharts.com/compare/@openfunction/functions-framework?minimal=true)
@@ -301,8 +301,9 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <table>
   <tbody>
     <tr>
-      <td align="center"><a href="https://github.com/YADROOKIE"><img src="https://avatars.githubusercontent.com/u/43526965?v=4?s=100" width="100px;" alt="MachaYAD"/><br /><sub><b>MachaYAD</b></sub></a><br /><a href="https://github.com/OpenFunction/functions-framework-nodejs/commits?author=YADROOKIE" title="Code">💻</a></td>
-      <td align="center"><a href="https://github.com/James-JLC"><img src="https://avatars.githubusercontent.com/u/3123790?v=4?s=100" width="100px;" alt="James.Ji"/><br /><sub><b>James.Ji</b></sub></a><br /><a href="https://github.com/OpenFunction/functions-framework-nodejs/issues?q=author%3AJames-JLC" title="Bug reports">🐛</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/YADROOKIE"><img src="https://avatars.githubusercontent.com/u/43526965?v=4?s=100" width="100px;" alt="MachaYAD"/><br /><sub><b>MachaYAD</b></sub></a><br /><a href="https://github.com/OpenFunction/functions-framework-nodejs/commits?author=YADROOKIE" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/James-JLC"><img src="https://avatars.githubusercontent.com/u/3123790?v=4?s=100" width="100px;" alt="James.Ji"/><br /><sub><b>James.Ji</b></sub></a><br /><a href="https://github.com/OpenFunction/functions-framework-nodejs/issues?q=author%3AJames-JLC" title="Bug reports">🐛</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://onepoint.link"><img src="https://avatars.githubusercontent.com/u/68337798?v=4?s=100" width="100px;" alt="yi-ge-dian"/><br /><sub><b>yi-ge-dian</b></sub></a><br /><a href="#maintenance-yi-ge-dian" title="Maintenance">🚧</a></td>
     </tr>
   </tbody>
 </table>
