@@ -303,7 +303,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/YADROOKIE"><img src="https://avatars.githubusercontent.com/u/43526965?v=4?s=100" width="100px;" alt="MachaYAD"/><br /><sub><b>MachaYAD</b></sub></a><br /><a href="https://github.com/OpenFunction/functions-framework-nodejs/commits?author=YADROOKIE" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/James-JLC"><img src="https://avatars.githubusercontent.com/u/3123790?v=4?s=100" width="100px;" alt="James.Ji"/><br /><sub><b>James.Ji</b></sub></a><br /><a href="https://github.com/OpenFunction/functions-framework-nodejs/issues?q=author%3AJames-JLC" title="Bug reports">🐛</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://onepoint.link"><img src="https://avatars.githubusercontent.com/u/68337798?v=4?s=100" width="100px;" alt="yi-ge-dian"/><br /><sub><b>yi-ge-dian</b></sub></a><br /><a href="#maintenance-yi-ge-dian" title="Maintenance">🚧</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://onepoint.link"><img src="https://avatars.githubusercontent.com/u/68337798?v=4?s=100" width="100px;" alt="yi-ge-dian"/><br /><sub><b>yi-ge-dian</b></sub></a><br /><a href="#maintenance-yi-ge-dian" title="Maintenance">🚧</a> <a href="https://github.com/OpenFunction/functions-framework-nodejs/commits?author=yi-ge-dian" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
