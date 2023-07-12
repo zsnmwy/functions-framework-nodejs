@@ -31,6 +31,10 @@ export interface OpenFunctionContext {
    */
   outputs?: Record<string, OpenFunctionComponent>;
   /**
+   * Optional state store config;
+   */
+  states?: Record<string, OpenFunctionComponent>;
+  /**
    * Optional plugins to be executed before user function.
    */
   prePlugins?: string[];
@@ -99,6 +103,10 @@ export enum ComponentType {
    * The pubsub type.
    */
   PubSub = 'pubsub',
+  /**
+   * The state type
+   */
+  State = 'state',
 }
 
 /**
@@ -138,6 +146,14 @@ export class ContextUtils {
    */
   static IsPubSubComponent(component: OpenFunctionComponent): boolean {
     return component?.componentType.split('.')[0] === ComponentType.PubSub;
+  }
+  /**
+   * Checks if the component is a state component.
+   * @param component - The component to check.
+   * @returns A boolean value.
+   */
+  static IsStateComponent(component: OpenFunctionComponent): boolean {
+    return component?.componentType.split('.')[0] === ComponentType.State;
   }
 }
 

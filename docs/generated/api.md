@@ -9,10 +9,12 @@
 
 import { CloudEventV1 as CloudEvent } from 'cloudevents';
 import { IndexedFieldWithPossiblyUndefined } from 'lodash';
+import { KeyValueType } from '@dapr/dapr/types/KeyValue.type';
 import { ParamsDictionary } from 'express-serve-static-core';
 import { ParsedQs } from 'qs';
 import { Request as Request_3 } from 'express';
 import { Response as Response_2 } from 'express';
+import { StateQueryResponseType } from '@dapr/dapr/types/state/StateQueryResponse.type';
 
 export { CloudEvent }
 
@@ -44,7 +46,8 @@ export interface CloudFunctionsContext {
 // @public
 export enum ComponentType {
     Binding = "bindings",
-    PubSub = "pubsub"
+    PubSub = "pubsub",
+    State = "state"
 }
 
 // @public
@@ -56,6 +59,7 @@ export class ContextUtils {
     static IsBindingComponent(component: OpenFunctionComponent): boolean;
     static IsKnativeRuntime(context: OpenFunctionContext): boolean;
     static IsPubSubComponent(component: OpenFunctionComponent): boolean;
+    static IsStateComponent(component: OpenFunctionComponent): boolean;
 }
 
 // @public
@@ -136,6 +140,7 @@ export interface OpenFunctionContext {
     postPlugins?: string[];
     prePlugins?: string[];
     runtime: `${RuntimeType}` | `${Capitalize<RuntimeType>}` | `${Uppercase<RuntimeType>}`;
+    states?: Record<string, OpenFunctionComponent>;
     version: string;
 }
 
@@ -156,6 +161,8 @@ export abstract class OpenFunctionRuntime {
         HTTP: string;
         GRPC: string;
     };
+    // Warning: (ae-forgotten-export) The symbol "StateOperations" needs to be exported by the entry point index.d.ts
+    abstract get state(): StateOperations;
     // Warning: (ae-forgotten-export) The symbol "OpenFunctionTrigger" needs to be exported by the entry point index.d.ts
     protected trigger?: OpenFunctionTrigger;
     static WrapUserFunction(userFunction: OpenFunction, context: OpenFunctionContext | OpenFunctionRuntime): (data: any) => Promise<void>;
