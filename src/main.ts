@@ -76,7 +76,7 @@ export const main = async () => {
     }
     // Then taking sync runtime as the fallback
     else {
-      const server = getServer(userFunction!, signatureType, options.context);
+      const server = await getServer(userFunction!, signatureType, options.context);
       const errorHandler = new ErrorHandler(server);
       server
         .listen(options.port, () => {

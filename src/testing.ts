@@ -41,14 +41,14 @@ export const getFunction = (
  *
  * @beta
  */
-export const getTestServer = (functionName: string): Server => {
+export const getTestServer = async (functionName: string): Promise<Server> => {
   const registeredFunction = getRegisteredFunction(functionName);
   if (!registeredFunction) {
     throw new Error(
       `The provided function "${functionName}" was not registered. Did you forget to require the module that defined it?`
     );
   }
-  return getServer(
+  return await getServer(
     registeredFunction.userFunction,
     registeredFunction.signatureType
   );

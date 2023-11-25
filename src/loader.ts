@@ -88,7 +88,7 @@ const dynamicImport = new Function(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ) as (modulePath: string) => Promise<any>;
 
-async function loadModule(modulePath: string) {
+export async function loadModule(modulePath: string) {
   let module;
 
   const esModule = await isEsModule(modulePath);
@@ -206,6 +206,30 @@ function getFunctionModulePath(codeLocation: string): string | null {
     try {
       // TODO: Decide if we want to keep this fallback.
       path = require.resolve(codeLocation + '/function.js');
+    } catch (ex) {
+      return path;
+    }
+  }
+  return path;
+}
+
+/**
+ * Returns resolved path to the module containing the trpc router.
+ * Returns null if the module can not be identified.
+ * @param trpcRouterLocation Directory with trpc router.
+ * @return Resolved path or null.
+ */
+export function getTrpcRouterModulePath(
+  trpcRouterLocation: string
+): string | null {
+  console.log('trpc router location', trpcRouterLocation);
+  let path: string | null = null;
+  try {
+    path = require.resolve(trpcRouterLocation);
+  } catch (ex) {
+    try {
+      // TODO: Decide if we want to keep this fallback.
+      path = require.resolve(trpcRouterLocation + '/index.js');
     } catch (ex) {
       return path;
     }

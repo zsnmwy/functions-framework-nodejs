@@ -23,6 +23,9 @@ import {legacyPubSubEventMiddleware} from './pubsub_middleware';
 import {cloudEventToBackgroundEventMiddleware} from './middleware/cloud_event_to_background_event';
 import {backgroundEventToCloudEventMiddleware} from './middleware/background_event_to_cloud_event';
 import {wrapUserFunction} from './function_wrappers';
+import * as trpcExpress from '@trpc/server/adapters/express';
+import {parseOptions} from './options';
+import {getTrpcRouterModulePath, loadModule} from './loader';
 
 /**
  * Creates and configures an Express application and returns an HTTP server
@@ -32,11 +35,13 @@ import {wrapUserFunction} from './function_wrappers';
  * @param context Optional context object.
  * @return HTTP server.
  */
-export function getServer(
+export async function getServer(
   userFunction: HandlerFunction,
   functionSignatureType: SignatureType,
   context?: object
-): http.Server {
+): Promise<http.Server> {
+  const options = parseOptions();
+
   // App to use for function executions.
   const app = express();
 
@@ -125,6 +130,31 @@ export function getServer(
       // contents particularly useful, so we send nothing in the response body.
       res.status(404).send(null);
     });
+
+    if (options.trpc) {
+      console.log('Try to enable Trpc Feature');
+
+      const trpcRouterLocationPath = getTrpcRouterModulePath(
+        options.trpcRouterLocation
+      );
+      if (!trpcRouterLocationPath) {
+        throw new Error('Fail to locate the Trpc Router');
+      }
+
+      const modules = await loadModule(trpcRouterLocationPath);
+      if (!modules.appRouter) {
+        throw new Error(
+          'Fail to read appRouter in path ' + trpcRouterLocationPath
+        );
+      }
+
+      app.use(
+        '/trpc',
+        trpcExpress.createExpressMiddleware({
+          router: modules.appRouter,
+        })
+      );
+    }
 
     app.use('/*', (req, res, next) => {
       onFinished(res, (err, res) => {

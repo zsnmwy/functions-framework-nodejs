@@ -38,6 +38,14 @@ export interface FrameworkOptions {
    */
   port: string;
   /**
+   * Enable the Trpc featrue.
+   */
+  trpc: boolean;
+  /**
+   * The path to the source code file containing the trpc router entry.
+   */
+  trpcRouterLocation: string;
+  /**
    * The name of the function within user's node module to execute. If such a
    * function is not defined, then falls back to 'function' name.
    */
@@ -94,6 +102,13 @@ class ConfigurableOption<T> {
 }
 
 const PortOption = new ConfigurableOption('port', 'PORT', '8080');
+const TrpcOption = new ConfigurableOption('trpc', 'TRPC', false);
+const TrpcRouterLocation = new ConfigurableOption(
+  'trpc-router-source',
+  'Trpc_ROUTER_SOURCE',
+  '',
+  () => resolve() + '/build/src/trpc'
+);
 const FunctionTargetOption = new ConfigurableOption(
   'target',
   'FUNCTION_TARGET',
@@ -159,10 +174,14 @@ export const parseOptions = (
       SignatureOption.cliOption,
       SourceLocationOption.cliOption,
       FunctionContextOption.cliOption,
+      TrpcOption.cliOption,
+      TrpcRouterLocation.cliOption,
     ],
   });
   return {
     port: PortOption.parse(argv, envVars),
+    trpc: TrpcOption.parse(argv, envVars),
+    trpcRouterLocation: TrpcRouterLocation.parse(argv, envVars),
     target: FunctionTargetOption.parse(argv, envVars),
     sourceLocation: SourceLocationOption.parse(argv, envVars),
     signatureType: SignatureOption.parse(argv, envVars),
