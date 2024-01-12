@@ -127,7 +127,7 @@ export async function getUserFunction(
     const functionModulePath = getFunctionModulePath(codeLocation);
 
     if (functionModulePath === null) {
-      console.error('Provided code is not a loadable module.');
+      console.error('Provided code is not a loadable module. Provided code location is ' + codeLocation);
       return null;
     }
 

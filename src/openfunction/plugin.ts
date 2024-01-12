@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import * as Debug from 'debug';
-import {get, invoke, isEmpty, omit, transform, trim} from 'lodash';
-
-import {OpenFunctionRuntime} from './runtime';
+import { get, invoke, isEmpty, omit, transform, trim } from 'lodash';
+import { OpenFunctionRuntime } from './runtime';
 
 const debug = Debug('ofn:plugin');
 
@@ -69,12 +68,36 @@ export class Plugin {
       `Plugin "${this.name}" has not implemented post hook function.`
     );
   }
+
+  /**
+   * This function is called before the Express middleware is applyed.
+   */
+  async execPreExpressMiddlewareApplyHook(
+    ctx: any,
+    plugins: Record<string, Plugin>
+  ) {
+    console.warn(
+      `Plugin "${this.name}" has not implemented execPreExpressMiddlewareApply hook function.`
+    );
+  }
+
+  /**
+   * This function is called before the Express middleware is applyed.
+   */
+  async execPostExpressMiddlewareApplyHook(
+    ctx: any,
+    plugins: Record<string, Plugin>
+  ) {
+    console.warn(
+      `Plugin "${this.name}" has not implemented execPostExpressMiddleware hook function.`
+    );
+  }
 }
 
 /**
  * PluginMap type definition.
  */
-export type PluginMap = Record<string, Plugin> & {_seq?: string[]};
+export type PluginMap = Record<string, Plugin> & { _seq?: string[] };
 
 enum PluginStoreType {
   BUILTIN = 1,
@@ -88,7 +111,7 @@ enum PluginStoreType {
 const stores = transform(
   PluginStoreType,
   (r, k, v) => {
-    r[v] = {_seq: []} as {} as PluginMap;
+    r[v] = { _seq: [] } as {} as PluginMap;
   },
   <Record<string, PluginMap>>{}
 );
@@ -194,6 +217,32 @@ export class PluginStore {
   }
 
   /**
+   * It invokes the `execPreExpressMiddlewareHook` function of each plugin in the order specified by the `seq` array
+   * @param ctx - The context object that is passed to the plugin.
+   * @param [seq] - The sequence of plugins to be executed. If not specified, all plugins will be executed.
+   */
+  async execPreExpressMiddlewareHooks(ctx: any, seq?: string[]) {
+    await this.#invokePluginBySeq(
+      ctx,
+      'execPreExpressMiddlewareApplyHook',
+      seq || (this.#isCustomStore && get(ctx, 'postPlugins')) || []
+    );
+  }
+
+  /**
+   * It invokes the `execPreExpressMiddlewareHook` function of each plugin in the order specified by the `seq` array
+   * @param ctx - The context object that is passed to the plugin.
+   * @param [seq] - The sequence of plugins to be executed. If not specified, all plugins will be executed.
+   */
+  async execPostExpressMiddlewareHooks(ctx: any, seq?: string[]) {
+    await this.#invokePluginBySeq(
+      ctx,
+      'execPostExpressMiddlewareApplyHook',
+      seq || (this.#isCustomStore && get(ctx, 'postPlugins')) || []
+    );
+  }
+
+  /**
    * It invokes a method on each plugin in the sequence.
    * @param ctx - OpenFunctionRuntime context object.
    * @param method - The method to invoke on the plugin.
@@ -218,7 +267,7 @@ export class PluginStore {
         const err = <Error>ex;
         console.error(
           `Failed to invoke "${method}" of plugin "${pluginName}"` +
-            `\nDetailed stack trace: ${err.stack}`
+          `\nDetailed stack trace: ${err.stack}`
         );
       }
     }

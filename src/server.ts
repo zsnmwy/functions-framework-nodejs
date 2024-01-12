@@ -16,13 +16,14 @@ import * as bodyParser from 'body-parser';
 import * as express from 'express';
 import * as http from 'http';
 import * as onFinished from 'on-finished';
-import {HandlerFunction, Request, Response} from './functions';
-import {SignatureType} from './types';
-import {setLatestRes} from './invoker';
-import {legacyPubSubEventMiddleware} from './pubsub_middleware';
-import {cloudEventToBackgroundEventMiddleware} from './middleware/cloud_event_to_background_event';
-import {backgroundEventToCloudEventMiddleware} from './middleware/background_event_to_cloud_event';
-import {wrapUserFunction} from './function_wrappers';
+import { HandlerFunction, Request, Response } from './functions';
+import { SignatureType } from './types';
+import { setLatestRes } from './invoker';
+import { legacyPubSubEventMiddleware } from './pubsub_middleware';
+import { cloudEventToBackgroundEventMiddleware } from './middleware/cloud_event_to_background_event';
+import { backgroundEventToCloudEventMiddleware } from './middleware/background_event_to_cloud_event';
+import { wrapUserFunction } from './function_wrappers';
+import { PluginStore } from './openfunction/plugin';
 
 /**
  * Creates and configures an Express application and returns an HTTP server
@@ -32,15 +33,34 @@ import {wrapUserFunction} from './function_wrappers';
  * @param context Optional context object.
  * @return HTTP server.
  */
-export function getServer(
+export async function getServer(
   userFunction: HandlerFunction,
   functionSignatureType: SignatureType,
   context?: object
-): http.Server {
+): Promise<http.Server> {
+
+  // Load plugin stores
+  const userPlugins = PluginStore.Instance();
+  const sysPlugins = PluginStore.Instance(PluginStore.Type.BUILTIN);
+
   // App to use for function executions.
   const app = express();
 
   // Express middleware
+
+  // Execute pre hooks, user plugins go first
+  await userPlugins.execPreExpressMiddlewareHooks({
+    app,
+    userFunction,
+    functionSignatureType,
+    context
+  });
+  await sysPlugins.execPreExpressMiddlewareHooks({
+    app,
+    userFunction,
+    functionSignatureType,
+    context
+  });
 
   // Set request-specific values in the very first middleware.
   app.use('/*', (req, res, next) => {
@@ -131,6 +151,21 @@ export function getServer(
         res.locals.functionExecutionFinished = true;
       });
       next();
+    });
+
+    // Execute pre hooks, user plugins go first
+    await userPlugins.execPostExpressMiddlewareHooks({
+      app,
+      userFunction,
+      functionSignatureType,
+      context
+    });
+
+    await sysPlugins.execPostExpressMiddlewareHooks({
+      app,
+      userFunction,
+      functionSignatureType,
+      context
     });
   }
 

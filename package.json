@@ -1,6 +1,6 @@
 {
   "name": "@openfunction/functions-framework",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "FaaS (Function as a service) framework for writing portable Node.js functions",
   "engines": {
     "node": ">=13.0.0"
@@ -28,7 +28,7 @@
     "skywalking-backend-js": "^0.7.0",
     "ts-node": "^10.9.1"
   },
-  "scripts": {
+"scripts": {
     "test": "cross-env DEBUG=common:*,ofn:* mocha build/test -t 60000 --recursive --exit",
     "build": "npm run clean && npm run compile",
     "check": "gts check",

@@ -41,7 +41,7 @@ export const getFunction = (
  *
  * @beta
  */
-export const getTestServer = (functionName: string): Server => {
+export const getTestServer = (functionName: string): Promise<Server> => {
   const registeredFunction = getRegisteredFunction(functionName);
   if (!registeredFunction) {
     throw new Error(
