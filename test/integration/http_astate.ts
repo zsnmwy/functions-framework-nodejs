@@ -175,6 +175,7 @@ describe('OpenFunction - HTTP State', () => {
           ctx.res?.send(data);
         },
         'openfunction',
+        true,
         context
       );
 

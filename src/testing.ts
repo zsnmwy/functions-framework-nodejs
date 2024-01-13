@@ -13,8 +13,6 @@
 // limitations under the License.
 
 // This module provides a set of utility functions that are useful for unit testing Cloud Functions.
-import {Server} from 'http';
-
 import {HandlerFunction} from '.';
 import {getRegisteredFunction} from './function_registry';
 import {getServer} from './server';
@@ -41,7 +39,7 @@ export const getFunction = (
  *
  * @beta
  */
-export const getTestServer = (functionName: string): Promise<Server> => {
+export const getTestServer = (functionName: string) => {
   const registeredFunction = getRegisteredFunction(functionName);
   if (!registeredFunction) {
     throw new Error(

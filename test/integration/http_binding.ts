@@ -92,6 +92,7 @@ describe('OpenFunction - HTTP Binding', () => {
           ctx.res?.send(data);
         },
         'openfunction',
+        true,
         context
       );
 

@@ -18,16 +18,15 @@
 // that runs user's code on HTTP request.
 import * as process from 'process';
 
-import {createHttpTerminator} from 'http-terminator';
-
-import getAysncServer from './openfunction/async_server';
-import {ContextUtils} from './openfunction/context';
-
-import {getUserFunction, getFunctionPlugins, getBuiltinPlugins} from './loader';
-import {ErrorHandler} from './invoker';
-import {getServer} from './server';
-import {parseOptions, helpText, OptionsError} from './options';
-import {OpenFunction} from './functions';
+import { createHttpTerminator } from 'http-terminator';
+import getAsyncServer from './openfunction/async_server';
+import { ContextUtils } from './openfunction/context';
+import * as http from 'http';
+import { getUserFunction, getFunctionPlugins, getBuiltinPlugins } from './loader';
+import { ErrorHandler } from './invoker';
+import { getServer } from './server';
+import { parseOptions, helpText, OptionsError } from './options';
+import { OpenFunction } from './functions';
 
 /**
  * Main entrypoint for the functions framework that loads the user's function
@@ -52,7 +51,7 @@ export const main = async () => {
       // eslint-disable-next-line no-process-exit
       process.exit(1);
     }
-    const {userFunction, signatureType} = loadedFunction;
+    const { userFunction, signatureType } = loadedFunction;
 
     // Load function plugins before starting server
     // First, we load system built-in function plugins
@@ -65,7 +64,7 @@ export const main = async () => {
     if (ContextUtils.IsAsyncRuntime(options.context!)) {
       options.context!.port = options.port;
 
-      const server = getAysncServer(
+      const server = getAsyncServer(
         userFunction! as OpenFunction,
         options.context!
       );
@@ -76,7 +75,8 @@ export const main = async () => {
     }
     // Then taking sync runtime as the fallback
     else {
-      const server = await getServer(userFunction!, signatureType, options.context);
+      const app = await getServer(userFunction!, signatureType, true, options.context);
+      const server = http.createServer(app)
       const errorHandler = new ErrorHandler(server);
       server
         .listen(options.port, () => {
@@ -106,10 +106,13 @@ export const main = async () => {
   }
 };
 
-// Call the main method to load the user code and start the http server.
-main();
 
-function handleShutdown(handler: () => Promise<void>): void {
+if (process.env.AUTO_START !== "disable") {
+  // Call the main method to load the user code and start the http server.
+  main();
+}
+
+export function handleShutdown(handler: () => Promise<void>): void {
   if (!handler) return;
 
   const shutdown = async (code: string) => {

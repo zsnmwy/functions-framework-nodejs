@@ -31,3 +31,13 @@ export * from './openfunction/context';
  * @public
  */
 export {Plugin} from './openfunction/plugin';
+
+/**
+ * @public
+ */
+export * from './manual'
+
+/**
+ * @public
+ */
+export * from './options'

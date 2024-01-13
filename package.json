@@ -1,6 +1,6 @@
 {
-  "name": "@openfunction/functions-framework",
-  "version": "0.6.2",
+  "name": "functions-framework",
+  "version": "0.6.10",
   "description": "FaaS (Function as a service) framework for writing portable Node.js functions",
   "engines": {
     "node": ">=13.0.0"
@@ -10,7 +10,8 @@
   "types": "build/src/index.d.ts",
   "exports": {
     ".": "./build/src/index.js",
-    "./testing": "./build/src/testing.js"
+    "./testing": "./build/src/testing.js",
+    "./build/src/manual": "./build/src/manual.js"
   },
   "dependencies": {
     "@dapr/dapr": "2.5.0",

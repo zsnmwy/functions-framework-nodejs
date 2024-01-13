@@ -31,13 +31,16 @@ import { PluginStore } from './openfunction/plugin';
  * @param userFunction User's function.
  * @param functionSignatureType Type of user's function signature.
  * @param context Optional context object.
- * @return HTTP server.
+ * @return Express Instance.
  */
 export async function getServer(
   userFunction: HandlerFunction,
   functionSignatureType: SignatureType,
-  context?: object
-): Promise<http.Server> {
+  isLoadUserFunction = true,
+  context?: object,
+  preExpressMiddlewareFn?: (app: unknown) => Promise<void>,
+  postExpressMiddlewareFn?: (app: unknown) => Promise<void>,
+) {
 
   // Load plugin stores
   const userPlugins = PluginStore.Instance();
@@ -47,6 +50,9 @@ export async function getServer(
   const app = express();
 
   // Express middleware
+
+  // Execute pre hook from Fn
+  preExpressMiddlewareFn && await preExpressMiddlewareFn(app);
 
   // Execute pre hooks, user plugins go first
   await userPlugins.execPreExpressMiddlewareHooks({
@@ -62,15 +68,18 @@ export async function getServer(
     context
   });
 
-  // Set request-specific values in the very first middleware.
-  app.use('/*', (req, res, next) => {
-    // Set function context in app locals for the lifetime of the request.
-    res.locals.context = context || {};
 
-    setLatestRes(res);
-    res.locals.functionExecutionFinished = false;
-    next();
-  });
+  if (isLoadUserFunction) {
+    // Set request-specific values in the very first middleware.
+    app.use('/*', (req, res, next) => {
+      // Set function context in app locals for the lifetime of the request.
+      res.locals.context = context || {};
+
+      setLatestRes(res);
+      res.locals.functionExecutionFinished = false;
+      next();
+    });
+  }
 
   /**
    * Retains a reference to the raw body buffer to allow access to the raw body
@@ -146,12 +155,17 @@ export async function getServer(
       res.status(404).send(null);
     });
 
-    app.use('/*', (req, res, next) => {
-      onFinished(res, (err, res) => {
-        res.locals.functionExecutionFinished = true;
+    if (isLoadUserFunction) {
+      app.use('/*', (req, res, next) => {
+        onFinished(res, (err, res) => {
+          res.locals.functionExecutionFinished = true;
+        });
+        next();
       });
-      next();
-    });
+    }
+
+    // Execute post hook from Fn
+    postExpressMiddlewareFn && await postExpressMiddlewareFn(app);
 
     // Execute pre hooks, user plugins go first
     await userPlugins.execPostExpressMiddlewareHooks({
@@ -169,17 +183,19 @@ export async function getServer(
     });
   }
 
-  // Set up the routes for the user's function
-  const requestHandler = wrapUserFunction(
-    userFunction,
-    functionSignatureType,
-    context
-  );
-  if (functionSignatureType === 'http') {
-    app.all('/*', requestHandler);
-  } else {
-    app.post('/*', requestHandler);
+  if (isLoadUserFunction) {
+    // Set up the routes for the user's function
+    const requestHandler = wrapUserFunction(
+      userFunction,
+      functionSignatureType,
+      context
+    );
+    if (functionSignatureType === 'http') {
+      app.all('/*', requestHandler);
+    } else {
+      app.post('/*', requestHandler);
+    }
   }
 
-  return http.createServer(app);
+  return app;
 }
